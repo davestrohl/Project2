@@ -28,7 +28,10 @@ player.yScale = 0.5
 player:prepare("def")
 player:play()
 
-local playerBody = {density = 1.5, friction = 1.0, bounce = .3}
-
-
+local playerBody = {density = 1.5, friction = 0.5, bounce = .3}
 physics.addBody(player, playerBody)
+
+local function playerTouch(event)
+    player:applyLinearImpulse((event.x - player.x) * .5, (event.y - player.y) * .5, player.x, player.y)
+end
+background:addEventListener("touch", playerTouch)
