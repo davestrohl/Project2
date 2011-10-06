@@ -89,19 +89,20 @@ init=function()
     physics.start()
     --physics.setDrawMode("hybrid")
     --input penguins for testing purposes
-    local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 260, 288)
+    local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 360, 288)
     local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
     sprite.add(penguinSet, "fly", 1, 2, 400)
-    local penguin = sprite.newSprite(penguinSet)
-    penguin.x = 500
-    penguin.y=500
+    penguin = sprite.newSprite(penguinSet)
+    penguin.x = 200
+    penguin.y=  500
     penguin.xScale = .3
     penguin.yScale = .3
     penguinpoly = {-30, -70, 30, -70, 70, 0, 40, 60, -40, 60, -70, 0}
-    physics.addBody(penguin, {density = 1.0, friction =10, bounce = 0.4, shape=penguinpoly})
+    physics.addBody(penguin, {density = 1.0, friction =10, bounce = 1, shape=penguinpoly})
     worldgroup:insert(penguin)
-    local edge1 = display.newRect(0,790,1000, 10)
-    physics.addBody(edge1, "static", {bounc =0.7})
+    edge1 = display.newRect(0,790,1000, 10)
+    physics.addBody(edge1, "static", {bounc =1})
+    worldgroup:insert(edge1)
     --map initialization
     --read in from file
     local path = system.pathForFile("test.txt", system.ResourceDirectory)
