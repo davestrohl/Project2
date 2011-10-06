@@ -1,2 +1,2 @@
-gfx/test_redtile.png 50 1200
-gfx/test_whitetile.png 50 150
+../gfx/test_redtile.png 100 100
+../gfx/test_whitetile.png 200 100

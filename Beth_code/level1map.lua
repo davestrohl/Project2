@@ -2,15 +2,19 @@ module(..., package.seeall)
 
 --External Modules
 sprite = require("sprite")
-scrollView = require("scrollView")
-local topBoundary = display.screenOriginY -100
-local bottomBoundary = display.screenOriginY + 48
-local scrollView = scrollView.new{top=topBoundary, bottom = bottomBoundary}
---
---
---
+physics = require("physics")
+
 --Declarations - variables/switches/etc
---here
+--make world group
+local worldgroup=display.newGroup()
+--put big rectangle in world group for touch purposes
+local world = display.newRect(0,0,800,1000)
+world:setFillColor(128,0,0)
+worldgroup:insert(world)
+--
+--
+--
+
 --
 --
 --
@@ -32,8 +36,11 @@ local levelOver = function(n_lvl)
     callUnload = true
 end
 
---levelLoop() this level's enterFrame event
+local function penguinFly(event)
+    penguin.y = 500 + 300*math.sin(event.time/3000)
+end
 
+--levelLoop() this level's enterFrame event
 local levelLoop = function (event)
     --[[
 
@@ -43,9 +50,10 @@ local levelLoop = function (event)
     Think of this kind of like a main() loop.
 
     ]]--
+    penguin:prepare("fly")
+    penguin:play()
 
     end
-
 --init and unloading functions
 --split function to be used in init
 split=function(str, pat)
@@ -67,12 +75,38 @@ split=function(str, pat)
    return t
 end
 
+--worldgroup's touch event function
+local moveWorld = function(event)
+    if event.phase == "ended" then
+        delta_x = event.x - event.xStart
+        delta_y = event.y - event.yStart
+        worldgroup:translate(delta_x, delta_y)
+    end
+        
+end
+
 init=function()
+    physics.start()
+    --physics.setDrawMode("hybrid")
+    --input penguins for testing purposes
+    local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 260, 288)
+    local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
+    sprite.add(penguinSet, "fly", 1, 2, 400)
+    local penguin = sprite.newSprite(penguinSet)
+    penguin.x = 500
+    penguin.y=500
+    penguin.xScale = .3
+    penguin.yScale = .3
+    penguinpoly = {-30, -70, 30, -70, 70, 0, 40, 60, -40, 60, -70, 0}
+    physics.addBody(penguin, {density = 1.0, friction =10, bounce = 0.4, shape=penguinpoly})
+    worldgroup:insert(penguin)
+    local edge1 = display.newRect(0,790,1000, 10)
+    physics.addBody(edge1, "static", {bounc =0.7})
     --map initialization
     --read in from file
     local path = system.pathForFile("test.txt", system.ResourceDirectory)
-    print(path)
-    local fh, reasion = io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
+    --print(path)
+    local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
     if fh then
         while true do
             local line = fh:read()
@@ -81,28 +115,28 @@ init=function()
             file = line[1]
             x = line[2]
             y = line[3]
-            print(v)
-            local playerSheet = sprite.newSpriteSheet(file, 100, 100)
-            local playerSet = sprite.newSpriteSet(playerSheet,1,1)
-            sprite.add(playerSet, "def", 1, 1, 1000)
-            local player = sprite.newSprite(playerSet)
-            player.x = x
-            player.y = y
-            player.xScale = 1
-            player.yScale = 1
-            scrollView:insert(player)
+            --print(v)
+            local objSheet = sprite.newSpriteSheet(file, 100, 100)
+            local objSet = sprite.newSpriteSet(objSheet,1,1)
+            sprite.add(objSet, "def", 1, 1, 1000)
+            local obj = sprite.newSprite(objSet)
+            obj.x = x
+            obj.y = y
+            obj.xScale = 1
+            obj.yScale = 1
+            worldgroup:insert(obj)
         end
     else
         print("fail")
     end
-    --local playerSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
-    -- local playerSet = sprite.newSpriteSet(playerSheet, 1, 1)
-    -- sprite.add(playerSet, "def", 1, 1, 1000)
-    -- local player = sprite.newSprite(playerSet)
-    -- player.x = display.contentWidth / 3
-    -- player.y = display.contentHeight / 3
-    -- player.xScale = 0.5
-    -- player.yScale = 0.5
+    --local objSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
+    -- local objSet = sprite.newSpriteSet(objSheet, 1, 1)
+    -- sprite.add(objSet, "def", 1, 1, 1000)
+    -- local obj = sprite.newSprite(objSet)
+    -- obj.x = display.contentWidth / 3
+    -- obj.y = display.contentHeight / 3
+    -- obj.xScale = 0.5
+    -- obj.yScale = 0.5
     -- call all of your creation functions
     -- here, and start any event listeners.
 
@@ -123,6 +157,8 @@ init=function()
 
     -- the screen's main enterFrame event
     Runtime:addEventListener( "enterFrame", levelLoop )
+    -- worldgroup touch eventlistener
+    worldgroup:addEventListener("touch", moveWorld)
 end
 
 unloadMe = function()
@@ -132,7 +168,7 @@ unloadMe = function()
     This is what is called when the screen is unloaded.
 
     For example, you probably want to unload this screen when the
-    player has a game over. So when a game over is detected (gameLives == 0),
+    obj has a game over. So when a game over is detected (gameLives == 0),
     all you need to do is set these two variables:
 
     Runtime:addEventListener( "enterFrame", gameListener )		--> start main.lua's event listener
