@@ -3,12 +3,7 @@
 
 local physics = require("physics")
 local sprite = require("sprite")
---local mc = require("movieclip")
 
---local enemy = require("enemy")
-
---local game = display.newGroup();
---game.x = 0
 viewRight = {0,0 , 80,-30 , 80,30}
 viewLeft = {0,0 , -80,30 , -80,-30}
 local enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
@@ -56,7 +51,7 @@ local function boundCollide(self, event)
 					self.super:patrol()
 				elseif ((event.other == self.bound1 or event.other == self.bound2) and event.phase == "ended") then
 					self:removeSelf()
-					physics.addBody(
+					physics.addBody(self, enemyBodyRight)
 				
 				end
 end
