@@ -1,17 +1,26 @@
---Declarations - variables/switches/etc
+--load external modules
+local physics = require("physics")
+local level1map = require("level1map")
+--local level2map = require("level2map")
+
+--some setup stuff
+physics.setDrawMode("hybrid") --Set physics Draw mode
+physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
+physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
+display.setStatusBar( display.HiddenStatusBar )
+
+local screenW, screenH = display.contentWidth, display.contentHeight
+local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight
+
 --level boolean switches
 local load_level1map = false
 local load_level2map = false
-
---load external modules
-local level1map = require("level1map")
-local level2map = require("level2map")
 
 --loadNext() determine which levelmap to load
 local loadNext = function(event)
     if next_level == "level1map" then
         load_level1map=true
-    elseif next_level = "level2map" then
+    elseif next_level == "level2map" then
         load_level2map = true
     end
 end
@@ -32,15 +41,15 @@ gameListener = function(event)
     end
 
 --LEVEL 2 MAP
-    if load_level2map then
-        load_level2map = false
-        level2map:init()
-    end
-    if level2map.callUnload then
-        level2map.callUnload = false
-        level2map.unloadMe()
-        loadNext()
-    end
+    -- if load_level2map then
+        -- load_level2map = false
+        -- level2map:init()
+    -- end
+    -- if level2map.callUnload then
+        -- level2map.callUnload = false
+        -- level2map.unloadMe()
+        -- loadNext()
+    -- end
 end
 
 -- loadApp() initializeds the game

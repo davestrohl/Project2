@@ -1,0 +1,2 @@
+gfx/test_redtile.png 50 1200
+gfx/test_whitetile.png 50 150
