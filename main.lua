@@ -4,10 +4,63 @@
 local physics = require("physics")
 local sprite = require("sprite")
 
+
+
+local playerBody = {density = 1.5, friction = 0.5, bounce = .3}
+Player = {x = 0, y = 0, spr = nil, disguised = false}
+
+function Player:new(x, y)
+    self.x = x; self.y = y
+    
+    local playerSheet = sprite.newSpriteSheet("gfx/mock.png", 72, 72)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 25)
+    --Set up animations for all the costumes
+    sprite.add(playerSet, "def", 1, 5, 5000)
+    sprite.add(playerSet, "plant", 21, 5, 5000, -2)
+    sprite.add(playerSet, "security", 11, 5, 5000)
+    sprite.add(playerSet, "statue", 16, 5, 5000)
+    sprite.add(playerSet, "change", 6, 5, 1000, 1)
+    
+    local player = sprite.newSprite(playerSet)
+    player.x = x
+    player.y = y
+    
+    player:prepare("def")
+    player:play()
+    
+    self.spr = player
+    
+    local object = {x = x, y = y, spr = self.spr}
+    setmetatable(object, {__index = Player})
+    self.spr.super = object
+    return object
+    
+end
+
+function Player:pose(disguise)
+    self.spr:prepare(disguise)
+    self.spr:play()
+    self.disguised = true
+end
+
+function Player:unpose()
+    self.spr:prepare("def")
+    self.spr:play()
+    self.disguised = false
+end
+
+function Player:getLocation()
+	return {x = self.spr.x , y = self.spr.y}
+end
+	
+function Player:setLocation( loc )
+	self.spr.x = loc.x; self.spr.y = loc.y
+end
+
 viewRight = {0,0 , 80,-30 , 80,30}
 viewLeft = {0,0 , -80,30 , -80,-30}
-local enemyBodyLeft = {density = 1.0, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
-local enemyBodyRight = {density = 1.0, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
+local enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
+local enemyBodyRight = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
 Enemy = { x = 0, y = 0 , spr = nil, initDirection = 'r', bound1 = nil, bound2 = nil}
 function Enemy:new(x, y)
 	self.x = x; self.y = y
@@ -113,35 +166,19 @@ end	]]
 		
 
 physics.start()
+physics.setDrawMode("hybrid") --Set physics Draw mode
+physics.setScale(60)
+physics.setGravity(0,0)
+display.setStatusBar( display.HiddenStatusBar )
 
 local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
 background:setFillColor(0, 0, 200)
 
-physics.setDrawMode("hybrid") --Set physics Draw mode
-physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
-physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
-display.setStatusBar( display.HiddenStatusBar )
-
-local screenW, screenH = display.contentWidth, display.contentHeight
-local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight --Screen Size properties
-local playerSheet = sprite.newSpriteSheet("ball_white.png", 72, 72)
-local playerSet = sprite.newSpriteSet(playerSheet, 1, 1)
-sprite.add(playerSet, "def", 1, 1, 1000)
-local player = sprite.newSprite(playerSet)
-player.x = display.contentWidth / 2
-player.y = display.contentHeight / 2
-player.xScale = 0.5
-player.yScale = 0.5
-
-player:prepare("def")
-player:play()
-
-
-
-local playerBody = {density = 1.5, friction = 0.5, bounce = .3}
-physics.addBody(player, playerBody)
-
 --local enemyBody = {density = 1.5, friction = 0.7, bounce = 0.3, radius = 50, isSensor = false}
+local player = Player:new(250, 250)
+physics.addBody(player.spr, playerBody)
+player.spr.linearDamping = .8
+
 
 local enemy1 = Enemy:new(150, 150)
 local loc = enemy1:getLocation()
@@ -182,20 +219,40 @@ local function onPostCollide(self, event)
 	--enemy2:setLocation({x = 350, y = 350})
 end
 
-local function playerTouch(event)
-    --player:applyLinearImpulse((event.x - player.x) * .5, (event.y - player.y) * .5, player.x, player.y)
-	player.x = event.x
-	player.y = event.y
-	--enemy1:move(50, -50)
-	
+local function playerTouch(self, event)
+    -- print(event.target)
+    -- print(player.spr)
+    local t = event.target
+    if event.phase == "began" then
+        display.getCurrentStage():setFocus(t)
+        t.isFocus = true
+        line = nil
+    elseif t.isFocus then
+        if event.phase == "moved" then
+            if ( line ) then
+				line.parent:remove( line ) -- erase previous line, if any
+			end
+			line = display.newLine( t.x,t.y, event.x,event.y )
+			line:setColor( 255, 255, 255, 50 )
+			line.width = 15
+        elseif (event.phase == "ended" or event.phase == "cancelled") then
+            display.getCurrentStage():setFocus(nil)
+            t.isFocus = false
+            if ( line ) then
+				line.parent:remove( line )
+			end
+            t:applyForce( (event.x - t.x), (event.y - t.y), t.x, t.y )	
+        end
+    end
 end
 
-background:addEventListener("touch", playerTouch)
+player.spr.touch = playerTouch
+player.spr:addEventListener("touch", player.spr)
 --Runtime:addEventListener("collision", onCollide)
-player.collision = onCollide
-player:addEventListener("collision", player)
-player.postCollision = onPostCollide
-player:addEventListener("postCollision", player)
+player.spr.collision = onCollide
+player.spr:addEventListener("collision", player.spr)
+player.spr.postCollision = onPostCollide
+player.spr:addEventListener("postCollision", player.spr)
 --enemy1.spr.collide = boundCollide
 	--print(boundCollide)
 --enemy1.spr:addEventListener("collide", enemy1.spr)
