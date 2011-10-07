@@ -3,6 +3,8 @@ local physics = require("physics")
 local level1map = require("level1map")
 --local level2map = require("level2map")
 
+--some setup stuff
+physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
 physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 display.setStatusBar( display.HiddenStatusBar )
 

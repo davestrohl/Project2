@@ -8,9 +8,15 @@ physics = require("physics")
 --make world group
 local worldgroup=display.newGroup()
 --put big rectangle in world group for touch purposes
-local world = display.newRect(0,0,800,1000)
+local world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
 worldgroup:insert(world)
+
+
+
+--image file references
+DESK = "../gfx/filler_desk.png"
+PLANT = "../gfx/filler_plant.png"
 --
 --
 --
@@ -88,7 +94,20 @@ end
 init=function()
     physics.start()
     --physics.setDrawMode("hybrid")
-    --input penguins for testing purposes
+    --put invisible walls around the world
+    top = display.newRect(0,0, 1056, 0)
+    physics.addBody(top, "static", {bounce =1})
+    worldgroup:insert(top)
+    bottom = display.newRect(0,960,1056,0)
+    physics.addBody(bottom, "static", {bounce =1})
+    worldgroup:insert(bottom)
+    left = display.newRect(0,0,0,960)
+    physics.addBody(left, "static", {bounce =1})
+    worldgroup:insert(left)
+    right = display.newRect(0,1056,0,960)
+    physics.addBody(right, "static", {bounce =1})
+    worldgroup:insert(right)
+    --input penguin for testing purposes
     local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 360, 288)
     local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
     sprite.add(penguinSet, "fly", 1, 2, 400)
@@ -100,9 +119,6 @@ init=function()
     penguinpoly = {-30, -70, 30, -70, 70, 0, 40, 60, -40, 60, -70, 0}
     physics.addBody(penguin, {density = 1.0, friction =10, bounce = 1, shape=penguinpoly})
     worldgroup:insert(penguin)
-    edge1 = display.newRect(0,790,1000, 10)
-    physics.addBody(edge1, "static", {bounc =1})
-    worldgroup:insert(edge1)
     --map initialization
     --read in from file
     local path = system.pathForFile("test.txt", system.ResourceDirectory)
@@ -116,8 +132,10 @@ init=function()
             file = line[1]
             x = line[2]
             y = line[3]
+            width=line[4]
+            height=line[5]
             --print(v)
-            local objSheet = sprite.newSpriteSheet(file, 100, 100)
+            local objSheet = sprite.newSpriteSheet(file, width, height)
             local objSet = sprite.newSpriteSet(objSheet,1,1)
             sprite.add(objSet, "def", 1, 1, 1000)
             local obj = sprite.newSprite(objSet)
@@ -125,6 +143,7 @@ init=function()
             obj.y = y
             obj.xScale = 1
             obj.yScale = 1
+            physics.addBody(obj, "static", {bounce =1})
             worldgroup:insert(obj)
         end
     else
