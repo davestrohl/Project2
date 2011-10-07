@@ -4,14 +4,27 @@ module(..., package.seeall)
 sprite = require("sprite")
 physics = require("physics")
 
-physics.setGravity( 0, 0 )
---Declarations - variables/switches/etc
---make world group
+physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
+physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
+
+--------------------------------------------------------------------
+--make world group for dragging the world around
 local worldgroup=display.newGroup()
 --put big rectangle in world group for touch purposes
 local world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
 worldgroup:insert(world)
+
+--worldgroup's touch event function
+local moveWorld = function(event)
+    if event.phase == "ended" then
+        delta_x = event.x - event.xStart
+        delta_y = event.y - event.yStart
+        worldgroup:translate(delta_x, delta_y)
+    end
+        
+end
+---------------------------------------------------------------------
 
 
 
@@ -28,6 +41,11 @@ PLANT = "../gfx/filler_plant.png"
 --Globals - to be accessed from main.lua
 callUnload = false
 
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+--  Player
+-----------------------------------------------------------------
+-----------------------------------------------------------------
 local playerBody = {density = 1.5, friction = 0.5, bounce = .3}
 Player = {x = 0, y = 0, spr = nil, disguised = false}
 
@@ -105,7 +123,14 @@ local function playerTouch(self, event)
         end
     end
 end
+--end player
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 
+
+------------------------------------------------------------------------------------------------------------------------------------------------    Enemy
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 viewRight = {0,0 , 80,-30 , 80,30}
 viewLeft = {0,0 , -80,30 , -80,-30}
 local enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
@@ -115,7 +140,7 @@ function Enemy:new(x, y)
 	self.x = x; self.y = y
 
 	
-	local enemySheet = sprite.newSpriteSheet("../ball_white.png", 72,72)
+	local enemySheet = sprite.newSpriteSheet("../gfx/test_whitetile.png", 72,72)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
 	sprite.add(enemySet, "patrol", 1, 1, 1000)
 	
@@ -204,27 +229,25 @@ function Enemy:patrol()
 		self.spr:setLinearVelocity(30, 0)
 	end
 end
+--end enemy
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
 
---Creation Functions
---[[
-
-Place all of your creation functions and any other
-functions that might need to be accessed from this
-screen's enterFrame event listener.
-
-]]--
-
+--
+-----------------------------------------------------------------------
+--  Level Over function
 local levelOver = function(n_lvl)
     Runtime: addEventListener("enterFrame", gameListener)
     next_level = n_lvl -- next_level is a global from main.lua
     callUnload = true
 end
+-----------------------------------------------------------------------
+--
 
-local function penguinFly(event)
-    penguin.y = 500 + 300*math.sin(event.time/3000)
-end
 
---levelLoop() this level's enterFrame event
+--
+-----------------------------------------------------------------------
+--  levelLoop() this level's enterFrame event
 local levelLoop = function (event)
     --[[
 
@@ -234,11 +257,14 @@ local levelLoop = function (event)
     Think of this kind of like a main() loop.
 
     ]]--
-    penguin:prepare("fly")
-    penguin:play()
 
-    end
---init and unloading functions
+end
+-----------------------------------------------------------------------
+--
+
+--
+----------------------------------------------------------------------
+-- functions used in init
 --split function to be used in init
 split=function(str, pat)
    local t = {}  -- NOTE: use {n = 0} in Lua-5.0
@@ -258,17 +284,15 @@ split=function(str, pat)
    end
    return t
 end
+----------------------------------------------------------------------
+--
 
---worldgroup's touch event function
-local moveWorld = function(event)
-    if event.phase == "ended" then
-        delta_x = event.x - event.xStart
-        delta_y = event.y - event.yStart
-        worldgroup:translate(delta_x, delta_y)
-    end
-        
-end
 
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+-- Level 1 initialize function
+----------------------------------------------------------------------
+----------------------------------------------------------------------
 init=function()
     physics.start()
     physics.setDrawMode("hybrid")
@@ -399,7 +423,17 @@ init=function()
 	player.spr.postCollision = onPostCollide
 	player.spr:addEventListener("postCollision", player.spr)
 end
+--end initialize
+----------------------------------------------------------------------
+----------------------------------------------------------------------
 
+
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+--  Unload me function for when the level is over
+---------------------------------------------------------------------
+---------------------------------------------------------------------
 unloadMe = function()
 
     --[[
@@ -449,3 +483,6 @@ unloadMe = function()
     -- collect any/all garbage
     collectgarbage( "collect" )
     end
+--end unloadme
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
