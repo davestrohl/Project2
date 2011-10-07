@@ -1,2 +1,4 @@
-../gfx/test_redtile.png 100 100
-../gfx/test_whitetile.png 200 100
+../gfx/filler_desk.png 576 432 384 480
+../gfx/filler_plant.png 528 48 96 96
+../gfx/filler_plant.png 528 144 96 96
+../gfx/filler_plant.png 432 720 96 96
