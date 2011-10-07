@@ -6,8 +6,8 @@ local sprite = require("sprite")
 
 viewRight = {0,0 , 80,-30 , 80,30}
 viewLeft = {0,0 , -80,30 , -80,-30}
-local enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
-local enemyBodyRight = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
+local enemyBodyLeft = {density = 1.0, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
+local enemyBodyRight = {density = 1.0, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
 Enemy = { x = 0, y = 0 , spr = nil, initDirection = 'r', bound1 = nil, bound2 = nil}
 function Enemy:new(x, y)
 	self.x = x; self.y = y
@@ -50,9 +50,7 @@ local function boundCollide(self, event)
 					--print(self.super.spr.direction)
 					self.super:patrol()
 				elseif ((event.other == self.bound1 or event.other == self.bound2) and event.phase == "ended") then
-					self:removeSelf()
-					physics.addBody(self, enemyBodyRight)
-				
+					self:applyAngularImpulse(10)	
 				end
 end
 
@@ -147,7 +145,8 @@ physics.addBody(player, playerBody)
 
 local enemy1 = Enemy:new(150, 150)
 local loc = enemy1:getLocation()
-physics.addBody(enemy1.spr, enemyBodyLeft)
+physics.addBody(enemy1.spr, enemyBodyRight)
+enemy1.spr.angularDamping = 2
 enemy1:spawnBounds({x = 125, y = 0})
 enemy1.spr.collision = boundCollide
 enemy1.spr:addEventListener("collision", enemy1.spr)
@@ -155,7 +154,8 @@ enemy1:patrol()
 
 
 local enemy2 = Enemy:new(350, 350)
-physics.addBody(enemy2.spr, enemyBodyLeft)
+physics.addBody(enemy2.spr, enemyBodyRight)
+enemy2.spr.angularDamping = 1
 enemy2:spawnBounds({x = 100, y = 0})
 enemy2.spr.collision = boundCollide
 enemy2.spr:addEventListener("collision", enemy2.spr)
