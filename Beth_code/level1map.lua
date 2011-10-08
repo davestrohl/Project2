@@ -237,7 +237,7 @@ end
 -----------------------------Camera-------------------------------
 viewRight = {0,0 , 80,-30 , 80,30}
 local cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
-Camera = { x = 0, y = 0, spr = nil}
+Camera = { x = 0, y = 0, spr = nil, initDirection = 'u'}
 function Camera:new(x, y)
     self.x = x; self.y = y
     
@@ -252,6 +252,27 @@ function Camera:new(x, y)
     camera.yScale = 0.5
     camera:prepare("patrol")
     camera:play()
+    
+    self.spr = camera
+    self.spr.direction = self.initdirection
+    
+    local object = {x = x, y = y, spr = self.spr, direction = self.spr.direction}
+    setmetatable(object, {__index = Camera})
+    self.spr.super = object
+    
+    return object
+end
+
+function Camera:getLocation()
+	return {x = self.spr.x , y = self.spr.y}
+end
+	
+function Camera:setLocation( loc )
+	self.spr.x = loc.x; self.spr.y = loc.y
+end
+
+function Camera:rotate()
+    
 end
 --end camera
 ----------------------------------------------------------------------
@@ -342,6 +363,7 @@ init=function()
 	local player = Player:new(250, 250)
 	physics.addBody(player.spr, playerBody)
 	player.spr.linearDamping = .8
+    player.spr.isFixedRotation = true
 
 
 	local enemy1 = Enemy:new(150, 150)
