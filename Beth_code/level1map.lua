@@ -15,23 +15,24 @@ local world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
 worldgroup:insert(world)
 
+--UI button listeners
+bottomListener = function(event)
+    worldgroup:translate(0,-100)
+end
+topListener = function(event)
+    worldgroup:translate(0,100)
+end
+leftListener = function(event)
+    worldgroup:translate(100,0)
+end
+rightListener = function(event)
+    worldgroup:translate(-100,0)
+end
 
 
 
 ---------------------------------------------------------------------
 
-
-
---image file references
-DESK = "../gfx/filler_desk.png"
-PLANT = "../gfx/filler_plant.png"
---
---
---
-
---
---
---
 --Globals - to be accessed from main.lua
 callUnload = false
 
@@ -230,6 +231,9 @@ end
 --end enemy
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------
 -----------------------------Camera-------------------------------
 viewRight = {0,0 , 80,-30 , 80,30}
 local cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
@@ -270,6 +274,10 @@ end
 function Camera:rotate()
     
 end
+--end camera
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -349,6 +357,8 @@ init=function()
     right = display.newRect(1056,0,0,960)
     physics.addBody(right, "static", {bounce =1})
     worldgroup:insert(right)
+    
+
 	
 	local player = Player:new(250, 250)
 	physics.addBody(player.spr, playerBody)
@@ -413,22 +423,22 @@ init=function()
         print("fail")
     end
     
-
-    --worldgroup's touch event function
-local moveWorld = function(event)
-    px = player.spr.x
-    py = player.spr.y
-    dist= math.sqrt((px-event.xStart)^2 + (py - event.yStart)^2)
-    if dist > 200 then
-        if event.phase == "ended" then
-            delta_x = event.x - event.xStart
-            delta_y = event.y - event.yStart
-            worldgroup:translate(delta_x, delta_y)
-        end
-    end
-end
+---------------------------------------------------------------------
+--Initial worldgroup's touch event function
+-- local moveWorld = function(event)
+    -- px = player.spr.x
+    -- py = player.spr.y
+    -- dist= math.sqrt((px-event.xStart)^2 + (py - event.yStart)^2)
+    -- if dist > 200 then
+        -- if event.phase == "ended" then
+            -- delta_x = event.x - event.xStart
+            -- delta_y = event.y - event.yStart
+            -- worldgroup:translate(delta_x, delta_y)
+        -- end
+    -- end
+-- end
 --
-
+----------------------------------------------------------------------
     --local objSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
     -- local objSet = sprite.newSpriteSet(objSheet, 1, 1)
     -- sprite.add(objSet, "def", 1, 1, 1000)
@@ -466,8 +476,12 @@ end
 	player.spr:addEventListener("collision", player.spr)
 	player.spr.postCollision = onPostCollide
 	player.spr:addEventListener("postCollision", player.spr)
-    -- worldgroup touch eventlistener
-    worldgroup:addEventListener("touch", moveWorld)
+    -- OLD worldgroup touch eventlistener
+    --worldgroup:addEventListener("touch", moveWorld)
+    top_button:addEventListener("touch", topListener)
+    bottom_button:addEventListener("touch", bottomListener)
+    right_button:addEventListener("touch", rightListener)
+    left_button:addEventListener("touch", leftListener)
 end
 --end initialize
 ----------------------------------------------------------------------
