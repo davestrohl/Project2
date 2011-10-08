@@ -297,13 +297,6 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-----------------------------------------------------------------------
-------------------------Shake Listener------------------------
-----------------------------------------------------------------------
-function onShake()
-    print("SHAKE")
-    menu:init()
-end
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -329,6 +322,22 @@ local levelLoop = function (event)
 
     ]]--
 
+end
+
+----------------------------------------------------------------------
+------------------------Shake Listener------------------------
+----------------------------------------------------------------------
+function onShake()
+    --print("SHAKE")
+    --pause everything
+    --Runtime:removeEventListener( "enterFrame", levelLoop )
+    Runtime:removeEventListener("accelerometer", onShake)
+    physics:pause()
+    menu:init()
+    --resume everything
+    --Runtime:addEventListener( "enterFrame", levelLoop )
+    Runtime:addEventListener("accelerometer", onShake)
+    physics:start()
 end
 -----------------------------------------------------------------------
 --
@@ -367,7 +376,7 @@ end
 
 init=function()
     physics.start()
-    --physics.setDrawMode("hybrid")
+    physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     
     print("hi")
