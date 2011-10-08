@@ -3,6 +3,7 @@ module(..., package.seeall)
 --External Modules
 sprite = require("sprite")
 physics = require("physics")
+menu = require("disguiseMenu")
 
 physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
 physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
@@ -294,6 +295,13 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+------------------------Shake Listener------------------------
+----------------------------------------------------------------------
+function onShake()
+    print("SHAKE")
+    menu:init()
+end
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -357,7 +365,7 @@ end
 
 init=function()
     physics.start()
-    physics.setDrawMode("hybrid")
+    --physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
 
     --put invisible walls around the world
@@ -498,6 +506,7 @@ init=function()
     bottom_button:addEventListener("touch", bottomListener)
     right_button:addEventListener("touch", rightListener)
     left_button:addEventListener("touch", leftListener)
+    Runtime:addEventListener("accelerometer", onShake)
 end
 --end initialize
 ----------------------------------------------------------------------

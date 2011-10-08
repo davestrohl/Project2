@@ -1,5 +1,6 @@
 module(..., package.seeall)
 local playnow = 1
+
 function menu()
     menuGroup = display.newGroup()
     
@@ -14,16 +15,21 @@ function menu()
     
     playButton:addEventListener("touch", init)
 end
-
+function levelOver(n_lvl)
+    Runtime: addEventListener("enterFrame", gameListener)
+    next_level = n_lvl -- next_level is a global from main.lua
+    callUnload = true
+end
 function init(event)
     mode = event.target.id
     if mode = playnow then
         menuGroup:removeSelf()
-        unloadMe()
+        levelOver("level1map")
     end
 end
 
 function unloadMe()
     collectgarbage("collect")
 end
+
 menu()
