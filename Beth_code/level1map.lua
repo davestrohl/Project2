@@ -15,6 +15,7 @@ local world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
 worldgroup:insert(world)
 
+
 --worldgroup's touch event function
 local moveWorld = function(event)
     if event.phase == "ended" then
@@ -23,6 +24,7 @@ local moveWorld = function(event)
         worldgroup:translate(delta_x, delta_y)
     end 
 end
+
 ---------------------------------------------------------------------
 
 
@@ -104,6 +106,7 @@ local function playerTouch(self, event)
         display.getCurrentStage():setFocus(t)
         t.isFocus = true
         line = nil
+        worldgroup:removeEventListener("touch", moveWorld)
     elseif t.isFocus then
         if event.phase == "moved" then
             if ( line ) then
@@ -112,13 +115,15 @@ local function playerTouch(self, event)
 			line = display.newLine( t.x,t.y, event.x,event.y )
 			line:setColor( 255, 255, 255, 50 )
 			line.width = 15
+            worldgroup:insert(line)
         elseif (event.phase == "ended" or event.phase == "cancelled") then
             display.getCurrentStage():setFocus(nil)
             t.isFocus = false
             if ( line ) then
 				line.parent:remove( line )
 			end
-            t:applyForce( (event.x - t.x), (event.y - t.y), t.x, t.y )	
+            t:applyForce( (event.x - t.x), (event.y - t.y), t.x, t.y )
+            worldgroup:addEventListener("touch", moveWorld)
         end
     end
 end
@@ -372,6 +377,17 @@ init=function()
     else
         print("fail")
     end
+    
+    --worldgroup's touch event function
+    local moveWorld = function(event)
+        if event.target ~= player.spr then
+            if event.phase == "ended" then
+                delta_x = event.x - event.xStart
+                delta_y = event.y - event.yStart
+                worldgroup:translate(delta_x, delta_y)
+            end
+        end
+    end
     --local objSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
     -- local objSet = sprite.newSpriteSet(objSheet, 1, 1)
     -- sprite.add(objSet, "def", 1, 1, 1000)
@@ -400,10 +416,11 @@ init=function()
 
     -- the screen's main enterFrame event
     Runtime:addEventListener( "enterFrame", levelLoop )
+    player.spr.touch = playerTouch
+	player.spr:addEventListener("touch", player.spr)
     -- worldgroup touch eventlistener
     worldgroup:addEventListener("touch", moveWorld)
-	player.spr.touch = playerTouch
-	player.spr:addEventListener("touch", player.spr)
+	
 	--Runtime:addEventListener("collision", onCollide)
 	player.spr.collision = onCollide
 	player.spr:addEventListener("collision", player.spr)
