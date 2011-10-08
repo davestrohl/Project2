@@ -16,6 +16,8 @@ world:setFillColor(128,0,0)
 worldgroup:insert(world)
 
 
+
+
 ---------------------------------------------------------------------
 
 
@@ -53,7 +55,7 @@ function Player:new(x, y)
     sprite.add(playerSet, "statue", 16, 5, 5000)
     sprite.add(playerSet, "change", 6, 5, 1000, 1)
     
-    local player = sprite.newSprite(playerSet)
+    player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
     
@@ -99,7 +101,6 @@ local function playerTouch(self, event)
         t.isFocus = true
         t:setLinearVelocity(0,0)
         line = nil
-        worldgroup:removeEventListener("touch", moveWorld)
     elseif t.isFocus then
         if event.phase == "moved" then
             if ( line ) then
@@ -116,21 +117,9 @@ local function playerTouch(self, event)
 				line.parent:remove( line )
 			end
             t:applyForce( (event.x - t.x), (event.y - t.y), t.x, t.y )
-            worldgroup:addEventListener("touch", moveWorld)
         end
     end
 end
-
-    --worldgroup's touch event function
-    local moveWorld = function(event)
-        --if event.target ~= player.spr then
-            if event.phase == "ended" then
-                delta_x = event.x - event.xStart
-                delta_y = event.y - event.yStart
-                worldgroup:translate(delta_x, delta_y)
-            end
-        --end
-    end
 
 --end player
 -----------------------------------------------------------------------
@@ -312,7 +301,6 @@ split=function(str, pat)
    return t
 end
 ----------------------------------------------------------------------
---
 
 
 -----------------------------------------------------------------------
@@ -320,6 +308,8 @@ end
 -- Level 1 initialize function
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+
+
 init=function()
     physics.start()
     physics.setDrawMode("hybrid")
@@ -338,18 +328,6 @@ init=function()
     right = display.newRect(1056,0,0,960)
     physics.addBody(right, "static", {bounce =1})
     worldgroup:insert(right)
-    --input penguin for testing purposes
-    -- local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 360, 288)
-    -- local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
-    -- sprite.add(penguinSet, 1, 2, 400)
-    -- penguin = sprite.newSprite(penguinSet)
-    -- penguin.x = 200
-    -- penguin.y=  500
-    -- penguin.xScale = .3
-    -- penguin.yScale = .3
-    -- penguinpoly = {-30, -70, 30, -70, 70, 0, 40, 60, -40, 60, -70, 0}
-    -- physics.addBody(penguin, {density = 1.0, friction =10, bounce = 1, shape=penguinpoly})
-    -- worldgroup:insert(penguin)
 	
 	local player = Player:new(250, 250)
 	physics.addBody(player.spr, playerBody)
@@ -414,6 +392,21 @@ init=function()
     end
     
 
+    --worldgroup's touch event function
+local moveWorld = function(event)
+    px = player.spr.x
+    py = player.spr.y
+    dist= math.sqrt((px-event.xStart)^2 + (py - event.yStart)^2)
+    if dist > 200 then
+        if event.phase == "ended" then
+            delta_x = event.x - event.xStart
+            delta_y = event.y - event.yStart
+            worldgroup:translate(delta_x, delta_y)
+        end
+    end
+end
+--
+
     --local objSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
     -- local objSet = sprite.newSpriteSet(objSheet, 1, 1)
     -- sprite.add(objSet, "def", 1, 1, 1000)
@@ -444,14 +437,15 @@ init=function()
     Runtime:addEventListener( "enterFrame", levelLoop )
     player.spr.touch = playerTouch
 	player.spr:addEventListener("touch", player.spr)
-    -- worldgroup touch eventlistener
-    worldgroup:addEventListener("touch", moveWorld)
+    
 	
 	--Runtime:addEventListener("collision", onCollide)
 	player.spr.collision = onCollide
 	player.spr:addEventListener("collision", player.spr)
 	player.spr.postCollision = onPostCollide
 	player.spr:addEventListener("postCollision", player.spr)
+    -- worldgroup touch eventlistener
+    worldgroup:addEventListener("touch", moveWorld)
 end
 --end initialize
 ----------------------------------------------------------------------
