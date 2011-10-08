@@ -245,10 +245,20 @@ end
 viewRight = {0,0 , 80,-30 , 80,30}
 local cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
 Camera = { x = 0, y = 0, spr = nil}
-function Enemy:new(x, y)
+function Camera:new(x, y)
     self.x = x; self.y = y
     
     local cameraSheet = sprite.newSpriteSheet("../gfx/test_whitetile.png", 72, 72)
+    local cameraSet = sprite.newSpriteSet(enemySheet, 1, 1)
+    sprite.add(cameraSet, "spin", 1, 1, 5000)
+    
+    local camera = sprite.newSprit(enemySet)
+    camera.x = x
+    camera.y = y
+    camera.xScale = 0.5
+    camera.yScale = 0.5
+    camera:prepare("patrol")
+    camera:play()
 end
 --
 -----------------------------------------------------------------------
