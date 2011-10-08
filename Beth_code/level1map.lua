@@ -91,6 +91,7 @@ function Player:setLocation( loc )
 	self.spr.x = loc.x; self.spr.y = loc.y
 end
 
+
 local function playerTouch(self, event)
     -- print(event.target)
     -- print(player.spr)
@@ -98,6 +99,7 @@ local function playerTouch(self, event)
     if event.phase == "began" then
         display.getCurrentStage():setFocus(t)
         t.isFocus = true
+        t:setLinearVelocity(0,0)
         line = nil
     elseif t.isFocus then
         if event.phase == "moved" then
@@ -118,6 +120,7 @@ local function playerTouch(self, event)
         end
     end
 end
+
 --end player
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
@@ -227,7 +230,15 @@ end
 --end enemy
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
-
+-----------------------------Camera-------------------------------
+viewRight = {0,0 , 80,-30 , 80,30}
+local cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
+Camera = { x = 0, y = 0, spr = nil}
+function Enemy:new(x, y)
+    self.x = x; self.y = y
+    
+    local cameraSheet = sprite.newSpriteSheet("../gfx/test_whitetile.png", 72, 72)
+end
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -370,6 +381,7 @@ init=function()
         print("fail")
     end
     
+
     --worldgroup's touch event function
 local moveWorld = function(event)
     px = player.spr.x
