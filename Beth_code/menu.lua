@@ -18,6 +18,7 @@ end
 function init(event)
     mode = event.target.id
     if mode = playnow then
+        menuGroup:removeSelf()
         exit()
     end
 end
