@@ -113,6 +113,7 @@ local function playerTouch(self, event)
 			line = display.newLine( t.x,t.y, event.x,event.y )
 			line:setColor( 255, 255, 255, 50 )
 			line.width = 15
+            worldgroup:insert(line)
         elseif (event.phase == "ended" or event.phase == "cancelled") then
             display.getCurrentStage():setFocus(nil)
             t.isFocus = false
