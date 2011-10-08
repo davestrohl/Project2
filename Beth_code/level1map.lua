@@ -8,6 +8,9 @@ menu = require("disguiseMenu")
 physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
 physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 
+------------------------------------------------------------
+--Globals - to be accessed from main.lua
+callUnload = false
 --------------------------------------------------------------------
 --make world group for dragging the world around
 worldgroup=display.newGroup()
@@ -50,8 +53,7 @@ end
 
 ---------------------------------------------------------------------
 
---Globals - to be accessed from main.lua
-callUnload = false
+
 
 -----------------------------------------------------------------
 -----------------------------------------------------------------
@@ -367,6 +369,8 @@ init=function()
     physics.start()
     --physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
+    
+    print("hi")
 
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
