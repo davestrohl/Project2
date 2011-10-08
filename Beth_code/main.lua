@@ -1,15 +1,14 @@
 --load external modules
 local physics = require("physics")
 local level1map = require("level1map")
+local menu = require("menu")
 --local level2map = require("level2map")
-
+next_level=""
 --some setup stuff
 
 display.setStatusBar( display.HiddenStatusBar )
-
 local screenW, screenH = display.contentWidth, display.contentHeight
 local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight
-
 -- UI buttons -add buttons for moving map
 top_button = display.newRect(190,0, 100, 20)
 bottom_button = display.newRect(190,854,100,-20)
@@ -18,12 +17,16 @@ right_button = display.newRect(480,427, -20, 100)
 
     
 --level boolean switches
+local load_menu = false
 local load_level1map = false
 local load_level2map = false
 
 --loadNext() determine which levelmap to load
 local loadNext = function(event)
-    if next_level == "level1map" then
+    print(next_level)
+    if next_level == "menu" then
+        load_menu = true
+    elseif next_level == "level1map" then
         load_level1map=true
     elseif next_level == "level2map" then
         load_level2map = true
@@ -33,6 +36,17 @@ end
 --gameListener() the app's main enterFrame listener
 -- note: NOT local
 gameListener = function(event)
+
+--MENU
+    if load_menu then
+        load_menu = false
+        menu:menu() -- call init (named menu in this case)
+    end
+    if menu.callUnload then
+        menu.callUnload = false
+        next_level = menu.unloadMe()
+        loadNext()
+    end
 
 --LEVEL 1 MAP
     if load_level1map then
@@ -62,7 +76,8 @@ end
 local loadApp = function()
     --start the listener for level changes
     Runtime:addEventListener("enterFrame", gameListener)
-    load_level1map = true --load first level
+    --load_level1map = true --load first level
+    load_menu = true --load menu screen
 end
 
 loadApp()
