@@ -11,22 +11,38 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 --make world group for dragging the world around
 worldgroup=display.newGroup()
 --put big rectangle in world group for touch purposes
-local world = display.newRect(0,0,1056,960)
+world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
 worldgroup:insert(world)
 
 --UI button listeners
 bottomListener = function(event)
-    worldgroup:translate(0,-100)
+    worldgroup:setReferencePoint(display.BottomCenterReferencePoint)
+    if worldgroup.y>200 then
+        worldgroup:translate(0,-100)
+    end
+    worldgroup:setReferencePoint(display.CenterReferencePoint)
 end
 topListener = function(event)
-    worldgroup:translate(0,100)
+    worldgroup:setReferencePoint(display.TopCenterReferencePoint)
+    if worldgroup.y<654 then
+        worldgroup:translate(0,100)
+    end
+    worldgroup:setReferencePoint(display.CenterReferencePoint)
 end
 leftListener = function(event)
-    worldgroup:translate(100,0)
+    worldgroup:setReferencePoint(display.CenterLeftReferencePoint)
+    if worldgroup.x<280 then
+        worldgroup:translate(100,0)
+    end
+    worldgroup:setReferencePoint(display.CenterReferencePoint)
 end
 rightListener = function(event)
-    worldgroup:translate(-100,0)
+    worldgroup:setReferencePoint(display.CenterRightReferencePoint)
+    if worldgroup.x >200 then
+        worldgroup:translate(-100,0)
+    end
+    worldgroup:setReferencePoint(display.CenterReferencePoint)
 end
 
 
