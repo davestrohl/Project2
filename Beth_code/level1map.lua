@@ -9,7 +9,7 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 
 --------------------------------------------------------------------
 --make world group for dragging the world around
-local worldgroup=display.newGroup()
+worldgroup=display.newGroup()
 --put big rectangle in world group for touch purposes
 local world = display.newRect(0,0,1056,960)
 world:setFillColor(128,0,0)
@@ -17,6 +17,7 @@ worldgroup:insert(world)
 
 --worldgroup's touch event function
 local moveWorld = function(event)
+    --if event.target == player
     if event.phase == "ended" then
         delta_x = event.x - event.xStart
         delta_y = event.y - event.yStart
@@ -315,7 +316,7 @@ init=function()
     --input penguin for testing purposes
     local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 360, 288)
     local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
-    sprite.add(penguinSet, "fly", 1, 2, 400)
+    sprite.add(penguinSet, 1, 2, 400)
     penguin = sprite.newSprite(penguinSet)
     penguin.x = 200
     penguin.y=  500
