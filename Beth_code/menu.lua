@@ -12,15 +12,18 @@ function menu()
     playButton.id = playnow
     menuGroup:insert(playButton)
     
-    playButtor:addEventListener("touch", init)
+    playButton:addEventListener("touch", init)
 end
 
 function init(event)
     mode = event.target.id
     if mode = playnow then
         menuGroup:removeSelf()
-        exit()
+        unloadMe()
     end
 end
 
+function unloadMe()
+    collectgarbage("collect")
+end
 menu()
