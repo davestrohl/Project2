@@ -17,13 +17,11 @@ worldgroup:insert(world)
 
 --worldgroup's touch event function
 local moveWorld = function(event)
-    --if event.target == player
     if event.phase == "ended" then
         delta_x = event.x - event.xStart
         delta_y = event.y - event.yStart
         worldgroup:translate(delta_x, delta_y)
-    end
-        
+    end 
 end
 ---------------------------------------------------------------------
 
@@ -62,7 +60,7 @@ function Player:new(x, y)
     sprite.add(playerSet, "statue", 16, 5, 5000)
     sprite.add(playerSet, "change", 6, 5, 1000, 1)
     
-    local player = sprite.newSprite(playerSet)
+    player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
     
@@ -312,18 +310,6 @@ init=function()
     right = display.newRect(1056,0,0,960)
     physics.addBody(right, "static", {bounce =1})
     worldgroup:insert(right)
-    --input penguin for testing purposes
-    local penguinSheet = sprite.newSpriteSheet("pixelpenguin.png", 360, 288)
-    local penguinSet = sprite.newSpriteSet(penguinSheet, 1, 2)
-    sprite.add(penguinSet, 1, 2, 400)
-    penguin = sprite.newSprite(penguinSet)
-    penguin.x = 200
-    penguin.y=  500
-    penguin.xScale = .3
-    penguin.yScale = .3
-    penguinpoly = {-30, -70, 30, -70, 70, 0, 40, 60, -40, 60, -70, 0}
-    physics.addBody(penguin, {density = 1.0, friction =10, bounce = 1, shape=penguinpoly})
-    worldgroup:insert(penguin)
 	
 	local player = Player:new(250, 250)
 	physics.addBody(player.spr, playerBody)
