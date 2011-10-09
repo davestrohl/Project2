@@ -3,9 +3,12 @@ local physics = require("physics")
 local level1map = require("level1map")
 local menu = require("menu")
 --local level2map = require("level2map")
+------------------------------------------------------------
+--some global variables
 next_level=""
+disguise = "def"
+-----------------------------------------------------
 --some setup stuff
-
 display.setStatusBar( display.HiddenStatusBar )
 local screenW, screenH = display.contentWidth, display.contentHeight
 local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight

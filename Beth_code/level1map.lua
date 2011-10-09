@@ -65,7 +65,6 @@ Player = {x = 0, y = 0, spr = nil, disguised = false}
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    
     local playerSheet = sprite.newSpriteSheet("../gfx/mock.png", 72, 72)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 25)
     --Set up animations for all the costumes
@@ -333,11 +332,12 @@ function onShake()
     Runtime:removeEventListener( "enterFrame", levelLoop )
     physics:pause()
     if open_menu then
-        menu:init()
         open_menu=false
+        menu:init()
+        
     else
-        menu:push()
         open_menu=true
+        menu:push()
     end
     --resume everything
     Runtime:addEventListener( "enterFrame", levelLoop )
