@@ -1,5 +1,5 @@
 module(..., package.seeall)
-
+level1map = require("level1map")
 function init()
     disguiseG = display.newGroup()
     --print(next_level)
@@ -37,13 +37,14 @@ function init()
 end
 
 function plantpush()
-    disguise ="plant"
-    player:pose()
+    print(level1map.disguise)
+    print("you hit the plant buttton")
+    level1map.disguise ="plant"
+    
 end
 
 function guardpush()
-    disguise="guard"
-    player:pose()
+    level1map.disguise="guard"
 end
 
 function push()

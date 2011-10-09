@@ -11,6 +11,7 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 ------------------------------------------------------------
 --Globals - to be accessed from main.lua
 callUnload = false
+disguise="def"
 --------------------------------------------------------------------
 --make world group for dragging the world around
 worldgroup=display.newGroup()
@@ -91,20 +92,20 @@ function Player:new(x, y)
 end
 
 function Player:pose()
-    if not self.disguised then
-        self.spr:prepare(disguise)
-        self.spr:play()
-        self.disguised = true
-    end
+    print("posing")
+    print(disguise)
+    self.spr:prepare(disguise)
+    self.spr:play()
+    --self.disguised = true
 end
 
-function Player:unpose()
-    if self.disguised then
-        self.spr:prepare("def")
-        self.spr:play()
-        self.disguised = false
-    end
-end
+-- function Player:unpose()
+    -- if self.disguised then
+        -- self.spr:prepare("def")
+        -- self.spr:play()
+        -- self.disguised = false
+    -- end
+-- end
 
 function Player:getLocation()
 	return {x = self.spr.x , y = self.spr.y}
@@ -314,38 +315,17 @@ end
 --  levelLoop() this level's enterFrame event
 local levelLoop = function (event)
     --[[
-
     This is your game's main enterFrame event listener.
     This function is called on every frame.
 
     Think of this kind of like a main() loop.
 
     ]]--
+    --print(disguise)
+    --player:pose()
 
 end
 
-----------------------------------------------------------------------
-------------------------Shake Listener------------------------
-----------------------------------------------------------------------
-function onShake()
-    --print("SHAKE")
-    --pause everything
-    Runtime:removeEventListener( "enterFrame", levelLoop )
-    physics:pause()
-    if open_menu then
-        open_menu=false
-        menu:init()
-        
-    else
-        open_menu=true
-        menu:push()
-    end
-    --resume everything
-    Runtime:addEventListener( "enterFrame", levelLoop )
-    physics:start()
-end
------------------------------------------------------------------------
---
 
 --
 ----------------------------------------------------------------------
@@ -382,9 +362,8 @@ init=function()
     physics.start()
     physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
-    
     --print("hi")
-
+    disguise="def"
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
     physics.addBody(top, "static", {bounce =1})
@@ -401,7 +380,7 @@ init=function()
     
 
 	
-	local player = Player:new(250, 250)
+	player = Player:new(250, 250)
 	physics.addBody(player.spr, playerBody)
 	player.spr.linearDamping = .8
     player.spr.isFixedRotation = true
@@ -528,7 +507,29 @@ init=function()
 end
 --end initialize
 ----------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+------------------------Shake Listener------------------------
 ----------------------------------------------------------------------
+function onShake()
+    --print("SHAKE")
+    --pause everything
+    Runtime:removeEventListener( "enterFrame", levelLoop )
+    physics:pause()
+    if open_menu then
+        open_menu=false
+        menu:init()
+        
+    else
+        open_menu=true
+        menu:push()
+    end
+    --resume everything
+    --print(disguise)
+    Runtime:addEventListener( "enterFrame", levelLoop )
+    physics:start()
+end
+-----------------------------------------------------------------------
+--
 
 
 

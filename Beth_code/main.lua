@@ -6,7 +6,7 @@ local menu = require("menu")
 ------------------------------------------------------------
 --some global variables
 next_level=""
-disguise = "def"
+disguise = ""
 -----------------------------------------------------
 --some setup stuff
 display.setStatusBar( display.HiddenStatusBar )
