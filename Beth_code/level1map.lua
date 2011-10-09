@@ -113,8 +113,6 @@ end
 
 
 local function playerTouch(self, event)
-    -- print(event.target)
-    -- print(player.spr)
     local t = event.target
     if event.phase == "began" then
         display.getCurrentStage():setFocus(t)
@@ -126,17 +124,16 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line ) -- erase previous line, if any
 			end
-			line = display.newLine( t.x,t.y, event.x,event.y )
+			line = display.newLine( event.xStart, event.yStart, event.x,event.y )
 			line:setColor( 255, 255, 255, 50 )
 			line.width = 15
-            worldgroup:insert(line)
         elseif (event.phase == "ended" or event.phase == "cancelled") then
             display.getCurrentStage():setFocus(nil)
             t.isFocus = false
             if ( line ) then
 				line.parent:remove( line )
 			end
-            t:applyForce( (event.x - t.x), (event.y - t.y), t.x, t.y )
+            t:applyForce( (event.x - event.xStart), (event.y - event.yStart), t.x, t.y )
         end
     end
 end
