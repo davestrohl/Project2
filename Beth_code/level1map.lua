@@ -91,16 +91,20 @@ function Player:new(x, y)
     
 end
 
-function Player:pose(disguise)
-    self.spr:prepare(disguise)
-    self.spr:play()
-    self.disguised = true
+function Player:pose()
+    if not self.disguised then
+        self.spr:prepare(disguise)
+        self.spr:play()
+        self.disguised = true
+    end
 end
 
 function Player:unpose()
-    self.spr:prepare("def")
-    self.spr:play()
-    self.disguised = false
+    if self.disguised then
+        self.spr:prepare("def")
+        self.spr:play()
+        self.disguised = false
+    end
 end
 
 function Player:getLocation()
