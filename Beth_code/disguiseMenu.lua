@@ -18,5 +18,5 @@ end
 function push()
     disguiseG:removeSelf()
     collectgarbage("collect")
-    print("HERE")
+    --print("HERE")
 end

@@ -327,13 +327,17 @@ end
 function onShake()
     --print("SHAKE")
     --pause everything
-    --Runtime:removeEventListener( "enterFrame", levelLoop )
-    Runtime:removeEventListener("accelerometer", onShake)
+    Runtime:removeEventListener( "enterFrame", levelLoop )
     physics:pause()
-    menu:init()
+    if open_menu then
+        menu:init()
+        open_menu=false
+    else
+        menu:push()
+        open_menu=true
+    end
     --resume everything
-    --Runtime:addEventListener( "enterFrame", levelLoop )
-    Runtime:addEventListener("accelerometer", onShake)
+    Runtime:addEventListener( "enterFrame", levelLoop )
     physics:start()
 end
 -----------------------------------------------------------------------
@@ -370,13 +374,12 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-
 init=function()
     physics.start()
     physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     
-    print("hi")
+    --print("hi")
 
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
@@ -517,6 +520,7 @@ init=function()
     right_button:addEventListener("touch", rightListener)
     left_button:addEventListener("touch", leftListener)
     Runtime:addEventListener("accelerometer", onShake)
+    open_menu = true
 end
 --end initialize
 ----------------------------------------------------------------------
