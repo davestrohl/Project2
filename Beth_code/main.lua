@@ -9,11 +9,14 @@ next_level=""
 display.setStatusBar( display.HiddenStatusBar )
 local screenW, screenH = display.contentWidth, display.contentHeight
 local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.viewableContentHeight
+
 -- UI buttons -add buttons for moving map
-top_button = display.newRect(190,0, 100, 20)
-bottom_button = display.newRect(190,854,100,-20)
-left_button = display.newRect(0,427,20,100)
-right_button = display.newRect(480,427, -20, 100)
+local button_maker = function()
+    top_button = display.newRect(190,0, 100, 20)
+    bottom_button = display.newRect(190,854,100,-20)
+    left_button = display.newRect(0,427,20,100)
+    right_button = display.newRect(480,427, -20, 100)
+end
 
     
 --level boolean switches
@@ -27,6 +30,7 @@ local loadNext = function(event)
     if next_level == "menu" then
         load_menu = true
     elseif next_level == "level1map" then
+        button_maker()
         load_level1map=true
     elseif next_level == "level2map" then
         load_level2map = true
