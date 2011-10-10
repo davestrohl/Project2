@@ -25,7 +25,7 @@ end
 --level boolean switches
 local load_menu = false
 local load_level1map = false
-local load_level2map = false
+--local load_level2map = false
 
 --loadNext() determine which levelmap to load
 local loadNext = function(event)
@@ -35,8 +35,8 @@ local loadNext = function(event)
     elseif next_level == "level1map" then
         button_maker()
         load_level1map=true
-    elseif next_level == "level2map" then
-        load_level2map = true
+    -- elseif next_level == "level2map" then
+        -- load_level2map = true
     end
 end
 
@@ -83,8 +83,8 @@ end
 local loadApp = function()
     --start the listener for level changes
     Runtime:addEventListener("enterFrame", gameListener)
+    print(next_level)
     --load_level1map = true --load first level
     load_menu = true --load menu screen
 end
-
 loadApp()

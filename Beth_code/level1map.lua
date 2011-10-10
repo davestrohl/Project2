@@ -307,6 +307,7 @@ end
 -----------------------------------------------------------------------
 --  Level Over function
 local levelOver = function(n_lvl)
+    print(n_lvl)
     Runtime: addEventListener("enterFrame", gameListener)
     next_level = n_lvl -- next_level is a global from main.lua
     callUnload = true
@@ -319,9 +320,7 @@ end
 -----------------------------------------------------------------------
 --  levelLoop() this level's enterFrame event
 local levelLoop = function (event)
-    if disguise=="plant" then
-        levelOver("level2map")
-    end
+    levelOver("menu")
     --[[
     This is your game's main enterFrame event listener.
     This function is called on every frame.
@@ -549,7 +548,6 @@ end
 ---------------------------------------------------------------------
 unloadMe = function()
 --clears everything at end of level
-
     -- remove any event listeners
     Runtime:removeEventListener( "enterFrame", levelLoop )
     top_button:removeEventListener("touch", topListener)
@@ -563,7 +561,7 @@ unloadMe = function()
     -- timer.cancel( myTimer )
 
 
-    --remove groups
+    --remove groups and objects
     worldgroup:removeSelf()
 
     -- collect any/all garbage
