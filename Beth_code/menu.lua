@@ -28,7 +28,7 @@ function init(event)
 end
 function menu_over()
     callUnload = true
-    next_level = "level1map"
+    --next_level = "level1map"
 end
 function unloadMe()
     --print("unloaded")
