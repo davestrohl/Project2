@@ -71,7 +71,7 @@ function Player:new(x, y)
     --Set up animations for all the costumes
     sprite.add(playerSet, "def", 1, 5, 5000)
     sprite.add(playerSet, "plant", 21, 5, 5000, -2)
-    sprite.add(playerSet, "security", 11, 5, 5000)
+    sprite.add(playerSet, "guard", 11, 5, 5000)
     sprite.add(playerSet, "statue", 16, 5, 5000)
     sprite.add(playerSet, "change", 6, 5, 1000, 1)
     
@@ -137,6 +137,11 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line )
 			end
+            if disguise ~= "guard" and disguise ~= "def" then
+                disguise = "def"
+                t:prepare(disguise)
+                t:play()
+            end
             t:applyForce( (event.x - event.xStart), (event.y - event.yStart), t.x, t.y )
         end
     end
@@ -526,6 +531,7 @@ function onShake()
         open_menu=true
         menu:push()
     end
+    player:pose()
     --resume everything
     --print(disguise)
     Runtime:addEventListener( "enterFrame", levelLoop )
