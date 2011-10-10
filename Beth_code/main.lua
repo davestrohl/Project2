@@ -2,7 +2,7 @@
 local physics = require("physics")
 local level1map = require("level1map")
 local menu = require("menu")
---local level2map = require("level2map")
+local level2map = require("level2map")
 ------------------------------------------------------------
 --some global variables
 next_level=""
@@ -16,9 +16,13 @@ local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.v
 -- UI buttons -add buttons for moving map
 local button_maker = function()
     top_button = display.newRect(190,0, 100, 20)
+    top_button:setFillColor(0,0,255)
     bottom_button = display.newRect(190,854,100,-20)
+    bottom_button:setFillColor(0,0,255)
     left_button = display.newRect(0,427,20,100)
+    left_button:setFillColor(0,0,255)
     right_button = display.newRect(480,427, -20, 100)
+    right_button:setFillColor(0,0,255)
 end
 
     
@@ -36,12 +40,12 @@ local loadNext = function(event)
         button_maker()
         load_level1map=true
     elseif next_level == "level2map" then
+        --button_maker()
         load_level2map = true
     end
 end
 
 --gameListener() the app's main enterFrame listener
--- note: NOT local
 gameListener = function(event)
 
 --MENU
@@ -62,20 +66,20 @@ gameListener = function(event)
     end
     if level1map.callUnload then
         level1map.callUnload = false --reset switch
-        level1map:unloadMe() -- call unload function
+        next_level = level1map:unloadMe() -- call unload function
         loadNext() -- load next levelmap
     end
 
 --LEVEL 2 MAP
-    -- if load_level2map then
-        -- load_level2map = false
-        -- level2map:init()
-    -- end
-    -- if level2map.callUnload then
-        -- level2map.callUnload = false
-        -- level2map.unloadMe()
-        -- loadNext()
-    -- end
+    if load_level2map then
+        load_level2map = false
+        level2map:init()
+    end
+    if level2map.callUnload then
+        level2map.callUnload = false
+        level2map.unloadMe()
+        loadNext()
+    end
 end
 
 -- loadApp() initializeds the game
@@ -84,7 +88,6 @@ local loadApp = function()
     --start the listener for level changes
     Runtime:addEventListener("enterFrame", gameListener)
     --load_level1map = true --load first level
-    load_menu = true --load menu screen
+    --load_menu = true --load menu screen
 end
-
 loadApp()

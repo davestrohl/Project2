@@ -8,7 +8,7 @@ function menu()
     menuBG:setFillColor(200, 200, 200)
     menuGroup:insert(menuBG)
     
-    local playButton = display.newRect(display.contentWidth/2 - 100, display.contentHeight/2 - 40, 200, 80)
+    playButton = display.newRect(display.contentWidth/2 - 100, display.contentHeight/2 - 40, 200, 80)
     playButton:setFillColor(255, 255, 255, 50)
     playButton.id = playnow
     menuGroup:insert(playButton)
@@ -28,11 +28,12 @@ function init(event)
 end
 function menu_over()
     callUnload = true
-    next_level = "level1map"
+    --next_level = "level1map"
 end
 function unloadMe()
-    print("unloaded")
+    --print("unloaded")
     menuGroup:removeSelf()
+    playButton:removeEventListener("touch",init)
     collectgarbage("collect")
     return "level1map"
 end

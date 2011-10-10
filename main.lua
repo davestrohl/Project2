@@ -69,12 +69,11 @@ enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, s
 enemyBodyRight = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewRight}
 enemyBodyUp = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewUp}
 enemyBodyDown = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewDown}
-Enemy = { x = 0, y = 0 , spr = nil, physDot = nil, initDirection = nil, bound1 = nil, bound2 = nil, orientation = nil}
-function Enemy:new(x, y, orientation)
-	self.x = x; self.y = y; self.orientation = orientation
+Enemy = { x = 0, y = 0 , spr = nil, physDot = nil, initDirection = nil, bound1 = nil, bound2 = nil, orientation = nil, pathLength = 0}
+function Enemy:new(x, y, orientation, pathLen)
+	self.x = x; self.y = y; self.orientation = orientation; self.pathLength = pathLen
 
-	
-	
+
 	local enemySheet = sprite.newSpriteSheet("ball_white.png", 72,72)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
 	sprite.add(enemySet, "patrol", 1, 1, 1000)
@@ -136,6 +135,19 @@ local function boundCollide(self, event)
 				end
 end
 
+function Enemy:init()
+	physics.addBody(self.spr, self:getSprBody())
+	physics.addBody(self.physDot, self:getPhysDotBody())
+	--enemy1.spr.angularDamping = 2
+	self:spawnBounds(self.pathLength)
+	self.spr.collision = boundCollide
+	self.spr:addEventListener("collision", self.spr)
+	self.physDot.collision = boundCollide
+	self.physDot:addEventListener("collision", self.physDot)
+	--enemy1.physDot.isBodyActive = false
+	self:patrol()
+end
+
 function Enemy:spawnBounds( dist )
 
 	if(self.orientation == 0) then
@@ -157,27 +169,6 @@ function Enemy:spawnBounds( dist )
 		self.spr.bound2 = bound2
 		self.physDot.bound2 = bound2
 	end
-	--[[local function boundCollide(self, event)
-			    
-				if ((event.other == self.bound1 or event.other == self.bound2) and event.phase == "began") then
-					--print(self.direction)
-					if(self.direction == 'l') then
-						self.direction = 'r'
-						self.super.spr.direction = 'r'
-					else
-						self.direction = 'l'
-						self.super.spr.direction = 'l'
-					end
-					--print(self.super.spr.direction)
-					self.super:patrol()
-				elseif ((event.other == self.bound1 or event.other == self.bound2) and event.phase == "ended") then
-				
-				
-				end
-		end]]
-	--self.spr.collision = boundCollide
-
-	--self.spr:addEventListener("collision", self.spr)
 end
 
 function Enemy:getLocation()
@@ -205,7 +196,6 @@ function Enemy:getPhysDotBody()
 	end
 end
 
---function Enemy:get
 
 function Enemy:patrol()
 
@@ -249,59 +239,96 @@ function Enemy:patrol()
 	end
 end
 
-cameraShape = {0,0 , 90, 40 , 90,-40}
-cameraBody = {density = 2.0, friction = 0.5, bounce = 0.3, isSensor = false, shape = cameraShape}
---cameraBody = {density = 0.8, friction = 0.3, bounce = 0.3}
+cameraShape = {0,0 , 90, -40 , 90,40}
+cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
 pivotBody = {friction = 0.7, isSensor = false}
 
-Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil}
-function Camera:new(x, y)
-	self.x = x; self.y = y
+Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, rotation = 0}
+function Camera:new(x, y, rotation)
+	self.x = x; self.y = y; self.rotation = rotation
 	
 	--[[local cameraSheet = sprite.newSpriteSheet("ball_white.png", 72,72)
 	local cameraSet = sprite.newSpriteSet(cameraSheet, 1, 1)
 	sprite.add(cameraSet, "scan", 1, 1, 1000)
 	
 	local camera = sprite.newSprite(cameraSet)]]
-	local camera = display.newImage("ball_white.png")
-	camera.x = x
+	--self.spr = display.newImage("ball_white.png")
+	self.spr = display.newRect(self.x, self.y - 5, 100, 10)
+	self.spr.x = x
+	self.spr.y = y
+	--[[camera.x = x
 	camera.y = y
 	camera.xScale = 0.5
 	camera.yScale = 0.5
-    --camera:prepare("scan")
-    --camera:play()
+    camera:prepare("scan")
+    camera:play()]]
 	
-	self.spr = camera
+	--self.spr = camera
+	
 	self.spr.direction = self.initDirection
-	self.pivot = display.newRect(self.x - 10 , self.y - 5, 100, 100)
-	--self.pivot = display.newImage("ball_white.png")
-	--self.pivot.x = x
-	--self.pivot.y = y
+	self.pivot = display.newRect(self.x - 5 , self.y - 5, 10, 10)
 
 
-	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction}
-	setmetatable(object, {__index = Enemy})
+
+	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc}
+	setmetatable(object, {__index = Camera})
 	self.spr.super = object
 	
 	return object
 end
 
---function Camera:scan()
-	
-	
---[[function Enemy:changeDirections()
-	if(self.direction == 'l') then
-		self.direction = 'r'
-	else
-		self.direction = 'l'
+function Camera:setLocation(loc)
+	self.spr.x = loc.x; self.spr.y = loc.y
+	self.pivot.x = loc.x; self.pivot.y = loc.y
+end
+
+function Camera:getLocation()
+	return {x = self.spr.x , y = self.spr.y}
+end
+
+function Camera:init()
+	physics.addBody(self.spr, cameraBody)
+	physics.addBody(self.pivot,  "static",  pivotBody)
+
+	--camera.pivot.isFixedRotation = true
+	local cameraJoint = physics.newJoint( "pivot",  self.pivot,self.spr,  self.x,self.y)
+	cameraJoint.isMotorEnabled = true
+	cameraJoint.motorSpeed = 60
+	cameraJoint.isLimitEnabled = true
+	cameraJoint.maxMotorTorque = 100000
+	cameraJoint:setRotationLimits(-60 + self.rotation, 60 + self.rotation)
+
+	self.joint = cameraJoint
+	--camera1.spr.super.joint = cameraJoint
+
+
+	self.enterFrame = cameraListener
+	Runtime:addEventListener("enterFrame", self)
+end
+
+function Camera:enterFrame(event)
+	--print(self.joint.jointAngle)
+	lim1, lim2 = self.joint:getRotationLimits()
+	--print(lim1 .. " and " .. lim2)
+	if(self.joint.jointAngle <= lim1 or self.joint.jointAngle >= lim2) then
+		if(not self.timerProc) then
+			timer.performWithDelay(2000, self, 1)
+			self.timerProc = true
+		end
+	elseif(self.joint.jointAngle >= lim1 and self.joint.jointAngle <= lim2) then
+		self.timerProc = false
 	end
-end	]]
-		
+end
+
+function Camera:timer(event)
+	self.joint.motorSpeed = self.joint.motorSpeed * -1
+end
+
 
 physics.start()
 physics.setDrawMode("hybrid") --Set physics Draw mode
 physics.setScale(60)
---physics.setGravity(0,0)
+physics.setGravity(0,0)
 display.setStatusBar( display.HiddenStatusBar )
 
 local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
@@ -313,45 +340,22 @@ physics.addBody(player.spr, playerBody)
 player.spr.linearDamping = .8
 
 
-local enemy1 = Enemy:new(150, 150, 0)
-local loc = enemy1:getLocation()
-physics.addBody(enemy1.spr, enemy1:getSprBody())
-physics.addBody(enemy1.physDot, enemy1:getPhysDotBody())
-enemy1.spr.angularDamping = 2
-enemy1:spawnBounds(125)
-enemy1.spr.collision = boundCollide
-enemy1.spr:addEventListener("collision", enemy1.spr)
-enemy1.physDot.collision = boundCollide
-enemy1.physDot:addEventListener("collision", enemy1.physDot)
---enemy1.physDot.isBodyActive = false
-enemy1:patrol()
+local enemy1 = Enemy:new(150, 150, 0, 125)
+enemy1:init()
 
 
-local enemy2 = Enemy:new(350, 350, 1)
-physics.addBody(enemy2.spr, enemy2:getSprBody())
-physics.addBody(enemy2.physDot, enemy2:getPhysDotBody())
-enemy2.spr.angularDamping = 1
-enemy2:spawnBounds(100)
-enemy2.spr.collision = boundCollide
-enemy2.spr:addEventListener("collision", enemy2.spr)
-enemy2.physDot.collision = boundCollide
-enemy2.physDot:addEventListener("collision", enemy2.physDot)
---enemy2.physDot.isBodyActive = false
-enemy2:patrol()
-
-local camera = Camera:new(350, 500)
-physics.addBody(camera.spr, "static", cameraBody)
-physics.addBody(camera.pivot,  pivotBody)
+local enemy2 = Enemy:new(350, 350, 1, 100)
+enemy2:init()
 
 
---camera.pivot.isFixedRotation = true
-cameraJoint = physics.newJoint( "pivot", camera.pivot, camera.spr, camera.x,camera.y)
---[[cameraJoint.isMotorEnabled = true
-cameraJoint.motorSpeed = 100
-cameraJoint.isLimitEnabled = true
-cameraJoint.maxMotorTorque = 100000
-cameraJoint:setRotationLimits(-45, 90)]]
---camera.spr:applyLinearImpulse(0, 45, camera.spr.x + 10, camera.spr.y)
+--Rotation angles greater than 60 breaks the physics; negative angles seem to work ok
+--Spawn Cameras with noticable change in initial angle bounds off the starting screen; they must snap to first bound before working normally
+local camera1 = Camera:new(350, 500, -180)
+camera1:init()
+
+local camera2 = Camera:new(350, 750, 60)
+camera2:init()
+
 
 
 local function onCollide(self, event)

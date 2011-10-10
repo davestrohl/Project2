@@ -14,42 +14,7 @@ callUnload = false
 disguise="def"
 guardsLeft = 5
 --------------------------------------------------------------------
---make world group for dragging the world around
-worldgroup=display.newGroup()
---put big rectangle in world group for touch purposes
-world = display.newRect(0,0,1056,960)
-world:setFillColor(128,0,0)
-worldgroup:insert(world)
 
---UI button listeners
-bottomListener = function(event)
-    worldgroup:setReferencePoint(display.BottomCenterReferencePoint)
-    if worldgroup.y>200 then
-        worldgroup:translate(0,-100)
-    end
-    worldgroup:setReferencePoint(display.CenterReferencePoint)
-end
-topListener = function(event)
-    worldgroup:setReferencePoint(display.TopCenterReferencePoint)
-    if worldgroup.y<654 then
-        worldgroup:translate(0,100)
-    end
-    worldgroup:setReferencePoint(display.CenterReferencePoint)
-end
-leftListener = function(event)
-    worldgroup:setReferencePoint(display.CenterLeftReferencePoint)
-    if worldgroup.x<280 then
-        worldgroup:translate(100,0)
-    end
-    worldgroup:setReferencePoint(display.CenterReferencePoint)
-end
-rightListener = function(event)
-    worldgroup:setReferencePoint(display.CenterRightReferencePoint)
-    if worldgroup.x >200 then
-        worldgroup:translate(-100,0)
-    end
-    worldgroup:setReferencePoint(display.CenterReferencePoint)
-end
 
 
 
@@ -312,9 +277,10 @@ end
 --
 -----------------------------------------------------------------------
 --  Level Over function
-local levelOver = function(n_lvl)
+local levelOver = function()
     Runtime: addEventListener("enterFrame", gameListener)
-    next_level = n_lvl -- next_level is a global from main.lua
+    --next_level = "level2map"
+    print(next_level)
     callUnload = true
 end
 -----------------------------------------------------------------------
@@ -325,6 +291,7 @@ end
 -----------------------------------------------------------------------
 --  levelLoop() this level's enterFrame event
 local levelLoop = function (event)
+    --levelOver()
     --[[
     This is your game's main enterFrame event listener.
     This function is called on every frame.
@@ -370,8 +337,47 @@ end
 ----------------------------------------------------------------------
 
 init=function()
+    --make world group for dragging the world around
+    worldgroup=display.newGroup()
+    --put big rectangle in world group for touch purposes
+    world = display.newRect(0,0,1056,960)
+    world:setFillColor(128,0,0)
+    worldgroup:insert(world)
+
+    --UI button listeners
+    bottomListener = function(event)
+        --print("bottom hit")
+        levelOver()
+        worldgroup:setReferencePoint(display.BottomCenterReferencePoint)
+        if worldgroup.y>200 then
+            worldgroup:translate(0,-100)
+        end
+        worldgroup:setReferencePoint(display.CenterReferencePoint)
+    end
+    topListener = function(event)
+        worldgroup:setReferencePoint(display.TopCenterReferencePoint)
+        if worldgroup.y<654 then
+            worldgroup:translate(0,100)
+        end
+        worldgroup:setReferencePoint(display.CenterReferencePoint)
+    end
+    leftListener = function(event)
+        worldgroup:setReferencePoint(display.CenterLeftReferencePoint)
+        if worldgroup.x<280 then
+            worldgroup:translate(100,0)
+        end
+        worldgroup:setReferencePoint(display.CenterReferencePoint)
+    end
+    rightListener = function(event)
+        worldgroup:setReferencePoint(display.CenterRightReferencePoint)
+        if worldgroup.x >200 then
+            worldgroup:translate(-100,0)
+        end
+        worldgroup:setReferencePoint(display.CenterReferencePoint)
+    end
+
     physics.start()
-    physics.setDrawMode("hybrid")
+    --physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     --print("hi")
     disguise="def"
@@ -470,27 +476,6 @@ init=function()
 -- end
 --
 ----------------------------------------------------------------------
-    --local objSheet = sprite.newSpriteSheet("gfx/floor_tile.jpg", 72, 72)
-    -- local objSet = sprite.newSpriteSet(objSheet, 1, 1)
-    -- sprite.add(objSet, "def", 1, 1, 1000)
-    -- local obj = sprite.newSprite(objSet)
-    -- obj.x = display.contentWidth / 3
-    -- obj.y = display.contentHeight / 3
-    -- obj.xScale = 0.5
-    -- obj.yScale = 0.5
-    -- call all of your creation functions
-    -- here, and start any event listeners.
-
-    -- call reset function (to reset screen variables such as score)
-    -- example:
-    -- resetScreenSettings()
-
-    -- call creation functions:
-
-    -- examples:
-    -- drawScreenObjects()
-    -- createGameMenuWindow()
-
     -- STOP main.lua's event listener (to free up processing power)
     Runtime:removeEventListener( "enterFrame", gameListener )
 
@@ -510,9 +495,13 @@ init=function()
     -- OLD worldgroup touch eventlistener
     --worldgroup:addEventListener("touch", moveWorld)
     top_button:addEventListener("touch", topListener)
+    top_button:toFront()
     bottom_button:addEventListener("touch", bottomListener)
+    bottom_button:toFront()
     right_button:addEventListener("touch", rightListener)
+    right_button:toFront()
     left_button:addEventListener("touch", leftListener)
+    left_button:toFront()
     Runtime:addEventListener("accelerometer", onShake)
     open_menu = true
 end
@@ -551,53 +540,27 @@ end
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 unloadMe = function()
-
-    --[[
-
-    This is what is called when the screen is unloaded.
-
-    For example, you probably want to unload this screen when the
-    obj has a game over. So when a game over is detected (gameLives == 0),
-    all you need to do is set these two variables:
-
-    Runtime:addEventListener( "enterFrame", gameListener )		--> start main.lua's event listener
-    nextScreen = "mainmenu"		--> assuming you have a mainmenu.lua screen
-    callUnload = true
-
-    Alternatively, you can use the gameOver() function I included. It can
-    be called like so:
-
-    gameOver( nextScreen )	--> example: gameOver( "mainmenu" )
-
-    By setting the variables above (or calling the gameOver() function), the main.lua's enterFrame event will
-    detect it and call THIS unloadMe function, and then call the init function
-    of the screen you set with the 'nextScreen' variable.
-        
-    ]]--
-
+--clears everything at end of level
     -- remove any event listeners
     Runtime:removeEventListener( "enterFrame", levelLoop )
+    top_button:removeEventListener("touch", topListener)
+    bottom_button:removeEventListener("touch", bottomListener)
+    right_button:removeEventListener("touch", rightListener)
+    left_button:removeEventListener("touch", leftListener)
+    --Runtime:removeEventListener("accelerometer", onShake)
 
     -- also, don't forget to stop any timers that you created
     -- example:
     -- timer.cancel( myTimer )
 
 
-    --[[ loop through all groups (that were created at the beginning of the file) and remove their children
-
-    -- example:
-
-    for i=screenGroup.numChildren,1,-1 do
-        child = screenGroup[i]
-        child.parent:remove( child )
-        child = nil
-        child.parent = nil
-    end
-
-    ]]--
+    --remove groups and objects
+    worldgroup:removeSelf()
+    physics:stop()
 
     -- collect any/all garbage
     collectgarbage( "collect" )
+    return "level2map"
     end
 --end unloadme
 -----------------------------------------------------------------------
