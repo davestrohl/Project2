@@ -12,6 +12,10 @@ function init()
     -- playButton:setFillColor(255, 255, 255)
     -- disguiseG:insert(playButton)
     
+    -- default disguise
+    defButton = display.newRect(90, 600, 300, 100)
+    defButton:setFillColor(255,255,255)
+    disguiseG:insert(defButton)
     --plant disguise
     plantButton = display.newRect(90, 200, 100, 100)
     plantButton:setFillColor(0,255,0)
@@ -20,31 +24,89 @@ function init()
     guardButton = display.newRect(290, 200, 100, 100)
     guardButton:setFillColor(0,0, 255)
     disguiseG:insert(guardButton)
-    
+    numGuards = display.newText(level1map.guardsLeft, 315, 225, "Helvetica", 52)
+    numGuards:setTextColor(255, 255, 255)
+    disguiseG:insert(numGuards)
+    --dinosaur disguise
+    dinoButton = display.newRect(90, 400, 100, 100)
+    dinoButton:setFillColor(255, 255, 0)
+    disguiseG:insert(dinoButton)
     --NOTE: next_level is still set to the current level until the level ends
     
     if next_level=="level1map" then
-        
+        dinoButton.isVisible = false
+        defButton:addEventListener("touch", defpush)
+        plantButton:addEventListener("touch", plantpush)
+        guardButton:addEventListener("touch", guardpush)
     elseif next_level =="level2map" then
-        --plant disguise
-        --security guard disguise
-        --dinosaur disguise
+        defButton:addEventListener("touch", defpush)
+        plantButton:addEventListener("touch", plantpush)
+        guardButton:addEventListener("touch", guardpush)
+        dinoButton:addEventListener("touch", dinopush)
     end
     
     --playButton:addEventListener("touch", push)
-    plantButton:addEventListener("touch", plantpush)
-    guardButton:addEventListener("touch", guardpush)
-end
-
-function plantpush()
-    print(level1map.disguise)
-    print("you hit the plant buttton")
-    level1map.disguise ="plant"
     
 end
 
+function defpush()
+    if next_level=="level1map" then
+        level1map.disguise = "def"
+        if level1map.player.spr.sequence ~= level1map.disguise then
+            level1map.player:pose()
+        end
+    elseif next_level =="level2map" then
+        level2map.disguise = "def"
+        if level2map.player.spr.sequence ~= level2map.disguise then
+            level2map.player:pose()
+        end
+    end
+end
+
+function plantpush()
+    -- print(level1map.disguise)
+    -- print("you hit the plant buttton")
+    if next_level=="level1map" then
+        level1map.disguise ="plant"
+        if level1map.player.spr.sequence ~= level1map.disguise then
+            level1map.player:pose()
+        end
+    elseif next_level =="level2map" then
+        level2map.disguise ="plant"
+        if level2map.player.spr.sequence ~= level2map.disguise then
+            level2map.player:pose()
+        end
+    end
+end
+
 function guardpush()
-    level1map.disguise="guard"
+    if next_level=="level1map" then
+        level1map.disguise = "guard"
+        if level1map.player.spr.sequence ~= level1map.disguise then
+            level1map.player:pose()
+            numGuards.text = level1map.guardsLeft
+        end
+    elseif next_level =="level2map" then
+        level2map.disguise = "guard"
+        if level2map.player.spr.sequence ~= level2map.disguise then
+            level2map.player:pose()
+            numGuards.text = level2map.guardsLeft
+        end
+    end
+end
+
+function dinopush()
+    if next_level=="level1map" then
+        level1map.disguise = "dino"
+        if level1map.player.spr.sequence ~= level1map.disguise then
+            level1map.player:pose()
+        end
+    elseif next_level =="level2map" then
+        level2map.disguise = "dino"
+        if level2map.player.spr.sequence ~= level2map.disguise then
+            level2map.player:pose()
+        end
+    end
 end
 
 function push()

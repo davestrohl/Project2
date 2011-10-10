@@ -12,6 +12,7 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 --Globals - to be accessed from main.lua
 callUnload = false
 disguise="def"
+guardsLeft = 5
 --------------------------------------------------------------------
 --make world group for dragging the world around
 worldgroup=display.newGroup()
@@ -70,10 +71,10 @@ function Player:new(x, y)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 25)
     --Set up animations for all the costumes
     sprite.add(playerSet, "def", 1, 5, 5000)
-    sprite.add(playerSet, "plant", 21, 5, 5000, -2)
+    sprite.add(playerSet, "plant", 21, 5, 5000)
     sprite.add(playerSet, "guard", 11, 5, 5000)
     sprite.add(playerSet, "statue", 16, 5, 5000)
-    sprite.add(playerSet, "change", 6, 5, 1000, 1)
+    sprite.add(playerSet, "dino", 6, 5, 5000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -92,10 +93,15 @@ function Player:new(x, y)
 end
 
 function Player:pose()
-    print("posing")
-    print(disguise)
-    self.spr:prepare(disguise)
-    self.spr:play()
+    -- print("posing")
+    -- print(disguise)
+    if disguise ~= "guard" or (disguise == "guard" and guardsLeft ~= 0) then
+        if disguise == "guard" then
+            guardsLeft = guardsLeft - 1
+        end
+        self.spr:prepare(disguise)
+        self.spr:play()
+    end
     --self.disguised = true
 end
 
@@ -528,7 +534,7 @@ function onShake()
         open_menu=true
         menu:push()
     end
-    player:pose()
+    --player:pose()
     --resume everything
     --print(disguise)
     Runtime:addEventListener( "enterFrame", levelLoop )
