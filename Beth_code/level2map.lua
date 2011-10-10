@@ -68,30 +68,7 @@ init=function()
 end
 
 unloadMe = function()
-
-    --[[
-
-    This is what is called when the screen is unloaded.
-
-    For example, you probably want to unload this screen when the
-    player has a game over. So when a game over is detected (gameLives == 0),
-    all you need to do is set these two variables:
-
-    Runtime:addEventListener( "enterFrame", gameListener )		--> start main.lua's event listener
-    nextScreen = "mainmenu"		--> assuming you have a mainmenu.lua screen
-    callUnload = true
-
-    Alternatively, you can use the gameOver() function I included. It can
-    be called like so:
-
-    gameOver( nextScreen )	--> example: gameOver( "mainmenu" )
-
-    By setting the variables above (or calling the gameOver() function), the main.lua's enterFrame event will
-    detect it and call THIS unloadMe function, and then call the init function
-    of the screen you set with the 'nextScreen' variable.
-        
-    ]]--
-
+--clear everything at end of level
     -- remove any event listeners
     Runtime:removeEventListener( "enterFrame", screenLoop )
 
