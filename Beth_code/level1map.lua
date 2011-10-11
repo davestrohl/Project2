@@ -5,6 +5,7 @@ sprite = require("sprite")
 physics = require("physics")
 menu = require("disguiseMenu")
 local physicsData = (require "shapedefs").physicsData()
+local playerphysics = (require "playershape").physicsData()
 
 physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
 physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
@@ -12,7 +13,7 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 ------------------------------------------------------------
 --Globals - to be accessed from main.lua
 callUnload = false
-disguise="def"
+disguise="down"
 guardsLeft = 5
 --------------------------------------------------------------------
 
@@ -33,20 +34,20 @@ Player = {x = 0, y = 0, spr = nil, disguised = false}
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/mock.png", 72, 72)
-    local playerSet = sprite.newSpriteSet(playerSheet, 1, 25)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 63)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
-    sprite.add(playerSet, "def", 1, 5, 5000)
-    sprite.add(playerSet, "plant", 21, 5, 5000)
-    sprite.add(playerSet, "guard", 11, 5, 5000)
-    sprite.add(playerSet, "statue", 16, 5, 5000)
-    sprite.add(playerSet, "dino", 6, 5, 5000)
+    sprite.add(playerSet, "down", 1, 6, 1000)
+    sprite.add(playerSet, "up", 7, 6, 1000)
+    sprite.add(playerSet, "right", 13, 6, 1000)
+    sprite.add(playerSet, "left", 19, 6, 1000)
+    --sprite.add(playerSet, "dino", 6, 6, 5000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
     
-    player:prepare("def")
+    player:prepare("down")
     player:play()
     
     self.spr = player
@@ -110,6 +111,7 @@ local function playerTouch(self, event)
 				line.parent:remove( line )
 			end
             if disguise ~= "guard" and disguise ~= "def" then
+            -- t is the player's sprite, so t:pose() can't be used
                 disguise = "def"
                 t:prepare(disguise)
                 t:play()
@@ -451,22 +453,22 @@ init=function()
     disguise="def"
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
-    physics.addBody(top, "static", {bounce =1})
+    physics.addBody(top, "static", {bounce =0})
     worldgroup:insert(top)
     bottom = display.newRect(0,960,1056,0)
-    physics.addBody(bottom, "static", {bounce =1})
+    physics.addBody(bottom, "static", {bounce =0})
     worldgroup:insert(bottom)
     left = display.newRect(0,0,0,960)
-    physics.addBody(left, "static", {bounce =1})
+    physics.addBody(left, "static", {bounce =0})
     worldgroup:insert(left)
     right = display.newRect(1056,0,0,960)
-    physics.addBody(right, "static", {bounce =1})
+    physics.addBody(right, "static", {bounce =0})
     worldgroup:insert(right)
     
 
 	
 	player = Player:new(250, 250)
-	physics.addBody(player.spr, playerBody)
+	physics.addBody(player.spr, playerphysics:get("player_sheet"))
 	player.spr.linearDamping = .8
     player.spr.isFixedRotation = true
 
