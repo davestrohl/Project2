@@ -4,12 +4,8 @@
 local physics = require("physics")
 local sprite = require("sprite")
 
-
-
-
-
 local playerBody = {density = 1.5, friction = 0.5, bounce = .3}
-Player = {x = 0, y = 0, spr = nil, disguised = false}
+Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touchedObject = nil}
 
 function Player:new(x, y)
     self.x = x; self.y = y
@@ -32,7 +28,7 @@ function Player:new(x, y)
     
     self.spr = player
     
-    local object = {x = x, y = y, spr = self.spr}
+    local object = {x = x, y = y, spr = self.spr, isTouching = self.isTouching, touchedObject = self.touchedObject}
     setmetatable(object, {__index = Player})
     self.spr.super = object
     return object
@@ -57,6 +53,41 @@ end
 	
 function Player:setLocation( loc )
 	self.spr.x = loc.x; self.spr.y = loc.y
+end
+
+function Player:enterFrame(event)
+
+	if(self.isTouching) then
+		
+		local l = enemyList
+			while l do
+			if(l.value.spr == self.touchedObject) then
+				--print(l.value.orientation)
+				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+					background:setFillColor(255,0,0)
+					--LOSE
+				elseif((l.value.orientation == 0 and l.value.spr.direction == 'l') or (l.value.orientation == 1 and l.value.spr.direction == 'd')) then
+					background:setFillColor(0,0,200)
+				end
+			elseif(l.value.physDot == self.touchedObject) then
+				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+					background:setFillColor(255,0,0)
+				elseif((l.value.orientation == 0 and l.value.physDot.direction == 'r') or (l.value.orientation == 1 and l.value.physDot.direction == 'u')) then
+					background:setFillColor(0,0,200)
+				end
+			end
+			l = l.next
+		end
+		
+		--[[l = cameraList
+		while l do
+			--print(l.value.spr)
+			if(l.value.spr == self.touchedObject) then
+				background:setFillColor(255,0,0)
+			end
+			l = l.next
+		end]]
+	end
 end
 
 viewRight = {0,0 , 80,-30 , 80,30}
@@ -99,7 +130,7 @@ function Enemy:new(x, y, orientation, pathLen)
 	
 	
 	
-	local object = {x = x, y = y, spr = self.spr, physDot = self.physDot, direction = self.spr.direction}
+	local object = {x = x, y = y, spr = self.spr, physDot = self.physDot, direction = self.spr.direction, orientation = self.orientation, pathLength = self.pathLength}
 	setmetatable(object, {__index = Enemy})
 	self.spr.super = object
 	self.physDot.super = object
@@ -146,6 +177,8 @@ function Enemy:init()
 	self.physDot:addEventListener("collision", self.physDot)
 	--enemy1.physDot.isBodyActive = false
 	self:patrol()
+	enemyList = {next = enemyList, value = self}
+
 end
 
 function Enemy:spawnBounds( dist )
@@ -241,7 +274,7 @@ end
 
 cameraShape = {0,0 , 90, -40 , 90,40}
 cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
-pivotBody = {friction = 0.7, isSensor = false}
+pivotBody = {friction = 0.7, isSensor = true}
 
 Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, rotation = 0}
 function Camera:new(x, y, rotation)
@@ -302,8 +335,8 @@ function Camera:init()
 	--camera1.spr.super.joint = cameraJoint
 
 
-	self.enterFrame = cameraListener
 	Runtime:addEventListener("enterFrame", self)
+	cameraList = {next = cameraList, value = self}
 end
 
 function Camera:enterFrame(event)
@@ -331,8 +364,13 @@ physics.setScale(60)
 physics.setGravity(0,0)
 display.setStatusBar( display.HiddenStatusBar )
 
-local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
+background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
 background:setFillColor(0, 0, 200)
+
+enemyList = nil
+cameraList = nil
+
+
 
 --local enemyBody = {density = 1.5, friction = 0.7, bounce = 0.3, radius = 50, isSensor = false}
 local player = Player:new(250, 250)
@@ -344,14 +382,14 @@ local enemy1 = Enemy:new(150, 150, 0, 125)
 enemy1:init()
 
 
-local enemy2 = Enemy:new(350, 350, 1, 100)
+local enemy2 = Enemy:new(350, 350, 1, 200)
 enemy2:init()
 
 
 --Rotation angles greater than 60 breaks the physics; negative angles seem to work ok
 --Spawn Cameras with noticable change in initial angle bounds off the starting screen; they must snap to first bound before working normally
-local camera1 = Camera:new(350, 500, -180)
-camera1:init()
+--[[local camera1 = Camera:new(350, 500, -180)
+camera1:init()]]
 
 local camera2 = Camera:new(350, 750, 60)
 camera2:init()
@@ -365,28 +403,129 @@ local function onCollide(self, event)
 	elseif((event.object1 == enemy1 or event.object2 == enemy1) and (event.object1 == player or event.object2 == player) and event.phase == "ended") then
 		background:setFillColor(0,0,200)
 	end]]
-	if(((event.other == enemy1.spr)or (event.other == enemy2.spr)) or ((event.other == enemy1.physDot ) or (event.other == enemy2.physDot )) and event.phase == "began") then
-		--if(
+	--[[if((((event.other == enemy1.spr) or (event.other == enemy2.spr)) or ((event.other == enemy1.physDot ) or (event.other == enemy2.physDot ))) and event.phase == "began") then
 		background:setFillColor(255,0,0)
 		--enemy2.spr:applyForce(50, -50, enemy1.spr.x, enemy2.spr.y)
-	elseif(((event.other == enemy1.spr ) or (event.other == enemy2.spr )) or ((event.other == enemy1.physDot ) or (event.other == enemy2.physDot)) and event.phase == "ended") then
+	elseif((((event.other == enemy1.spr ) or (event.other == enemy2.spr)) or ((event.other == enemy1.physDot ) or (event.other == enemy2.physDot))) and event.phase == "ended") then
 		background:setFillColor(0,0,200)
-	end
-	--[[if((event.other == enemy1.physDot or event.other == enemy2.physDot) and event.phase == "began") then
-		--if(
-		background:setFillColor(255,0,0)
-		--enemy2.spr:applyForce(50, -50, enemy1.spr.x, enemy2.spr.y)
-	elseif((event.other == enemy1.physDot or event.other == enemy2.physDot) and event.phase == "ended") then
-		background:setFillColor(0,0,200)
-    end]]
+	end]]
 	
+	if(event.phase == "began") then
+		
+		local l = enemyList
+		while l do
+			if(l.value.spr == event.other) then
+				self.super.isTouching = true
+				self.super.touchedObject = event.other
+				--print(l.value.orientation)
+				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+					background:setFillColor(255,0,0)
+					--LOSE
+				end
+			elseif(l.value.physDot == event.other) then
+				self.super.isTouching = true
+				self.super.touchedObject = event.other
+				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+					background:setFillColor(255,0,0)
+				end
+			end
+			l = l.next
+		end
+		
+		l = cameraList
+		while l do
+			--print(l.value.spr)
+			if(l.value.spr == event.other) then
+				background:setFillColor(255,0,0)
+			end
+			l = l.next
+		end
+	elseif(event.phase == "ended") then
+		local l = enemyList
+		while l do
+			if(l.value.spr == event.other) then
+				self.super.isTouching = false
+				self.super.touchedObject = nil
+				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+					background:setFillColor(0,0,200)
+				end
+			elseif(l.value.physDot == event.other) then
+				self.super.isTouching = false
+				self.super.touchedObject = nil
+				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+					background:setFillColor(0,0,200)
+				end
+			end
+			l = l.next
+		end
+		
+		l = cameraList
+		while l do
+			if(l.value.spr == event.other) then
+				background:setFillColor(0,0,200)
+			end
+			l = l.next
+		end 
+	end
 end
 
 
-local function onPostCollide(self, event)
+--[[local function onPostCollide(self, event)
 	--enemy2.spr:setLinearVelocity(0,0)
+	print("foot")
 	--enemy2:setLocation({x = 350, y = 350})
-end
+	local l = enemyList
+		while l do
+			if(l.value.spr == event.other) then
+				print(l.value.orientation)
+				print(l.value.direction)
+				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+					background:setFillColor(255,0,0)
+					--LOSE
+				elseif((l.value.orientation == 0 and l.value.spr.direction == 'l') or (l.value.orientation == 1 and l.value.spr.direction == 'd')) then
+					background:setFillColor(0,0,200)
+				end
+			elseif(l.value.physDot == event.other) then
+				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+					background:setFillColor(255,0,0)
+				elseif((l.value.orientation == 0 and l.value.physDot.direction == 'r') or (l.value.orientation == 1 and l.value.physDot.direction == 'u')) then
+					background.setFillColor(0,0,200)
+				end
+			end
+			l = l.next
+		end
+		
+		l = cameraList
+		while l do
+			--print(l.value.spr)
+			if(l.value.spr == event.other) then
+				background:setFillColor(255,0,0)
+			end
+			l = l.next
+		end
+	elseif(event.phase == "ended") then
+		local l = enemyList
+		while l do
+			if(l.value.spr == event.other) then
+				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+					background:setFillColor(0,0,200)
+				end
+			elseif(l.value.physDot == event.other) then
+				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+					background:setFillColor(0,0,200)
+				end
+			end
+			l = l.next
+		end
+		
+		l = cameraList
+		while l do
+			if(l.value.spr == event.other) then
+				background:setFillColor(0,0,200)
+			end
+			l = l.next
+		end
+end]]
 
 local function playerTouch(self, event)
     -- print(event.target)
@@ -420,8 +559,11 @@ player.spr:addEventListener("touch", player.spr)
 --Runtime:addEventListener("collision", onCollide)
 player.spr.collision = onCollide
 player.spr:addEventListener("collision", player.spr)
-player.spr.postCollision = onPostCollide
-player.spr:addEventListener("postCollision", player.spr)
+
+Runtime:addEventListener("enterFrame", player)
+--Runtime:addEventListener("collision", player.spr)
+--player.spr.postCollision = onPostCollide
+--player.spr:addEventListener("postCollision", player.spr)
 --enemy1.spr.collide = boundCollide
 	--print(boundCollide)
 --enemy1.spr:addEventListener("collide", enemy1.spr)
