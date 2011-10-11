@@ -20,47 +20,47 @@ function physicsData(scale)
 	local physics = { data =
 	{ 
 		
-		["filler_desk"] = {
+		["desk"] = {
 			
 				{
-					density = 2, friction = 2, bounce = 0, 
+					density = 2, friction = 0, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -47, -109  ,  -180, -238  ,  187, -241  ,  178, -115  }
+					shape = {   -110, 163  ,  -87, 87  ,  167, 85  ,  172, 142  ,  167, 161  }
 				}  ,
 				{
-					density = 2, friction = 2, bounce = 0, 
+					density = 2, friction = 0, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   193.24560546875, 238.263157963753  ,  -183, 228  ,  -41, 99  ,  189, 123  }
+					shape = {   -154, 165  ,  -175, 163  ,  -171, -182  ,  -93, -148  ,  -87, 87  ,  -110, 163  }
 				}  ,
 				{
-					density = 2, friction = 2, bounce = 0, 
+					density = 2, friction = 0, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -183, 228  ,  -180, -238  ,  -47, -109  ,  -41, 99  }
+					shape = {   -93, -148  ,  -171, -182  ,  171, -181  ,  173, -148  }
 				}  
 		}
 		
 		, 
-		["filler_plant"] = {
+		["dinosaur"] = {
+			
+		}
+		
+		, 
+		["statue"] = {
+			
+		}
+		
+		, 
+		["statue_2"] = {
+			
+		}
+		
+		, 
+		["plant"] = {
 			
 				{
 					density = 2, friction = 0, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -14, 34.5  ,  -31, 21  ,  -32.5, 3.5  ,  -22, -17.5  ,  -0.5, 5.5  ,  14.5, 25  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -2.5, -21.5  ,  -0.5, 5.5  ,  -22, -17.5  ,  -29.5, -31  ,  -13, -41.5  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -0.5, 5.5  ,  -2.5, -21.5  ,  28.5, -15  ,  50.5, 10  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   28.5, -15  ,  -2.5, -21.5  ,  28, -28.5  }
+					shape = {   -39, -78.5  ,  34.5, -84  ,  47.5, 16  ,  -50, 20.5  }
 				}  
 		}
 		

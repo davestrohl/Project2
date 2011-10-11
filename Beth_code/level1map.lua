@@ -347,7 +347,7 @@ mapinit=function()
             line = split(line, " ")
             file = line[1]
             if file == "enemy" then
-                print("enemy")
+                --print("enemy")
                 x = line[2]
                 y = line[3]
                 bx = line[4]
@@ -366,17 +366,17 @@ mapinit=function()
                 worldgroup:insert(obj.spr.bound1)
                 worldgroup:insert(obj.spr.bound2)
             else
-                print("not enemy")
+                --print("not enemy")
                 x = line[2]
                 y = line[3]
                 width=line[4]
                 height=line[5]
                 if file == "desk" then
-                    image="../gfx/filler_desk.png"
-                    bodyname="filler_desk"
+                    image="../gfx/desk.png"
+                    bodyname="desk"
                 elseif file == "plant" then
-                    image ="../gfx/filler_plant.png"
-                    bodyname="filler_plant"
+                    image ="../gfx/plant.png"
+                    bodyname="plant"
                 else
                     image = nil
                 end
@@ -447,7 +447,7 @@ init=function()
     end
 
     physics.start()
-    physics.setDrawMode("hybrid")
+    --physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     --print("hi")
     disguise="def"
