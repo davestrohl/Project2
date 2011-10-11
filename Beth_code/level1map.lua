@@ -4,6 +4,7 @@ module(..., package.seeall)
 sprite = require("sprite")
 physics = require("physics")
 menu = require("disguiseMenu")
+local physicsData = (require "shapedefs").physicsData()
 
 physics.setScale( 60 ) -- a value that seems good for small objects (based on playtesting)
 physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
@@ -328,7 +329,53 @@ split=function(str, pat)
    return t
 end
 ----------------------------------------------------------------------
+--------------------------------------------------------------------
+--map read in function
 
+mapinit=function()
+--map initialization
+    --read in from file
+    local path = system.pathForFile("level1.txt", system.ResourceDirectory)
+    --print(path)
+    local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
+    if fh then
+        while true do
+            local line = fh:read()
+            if line == nil then break end
+            line = split(line, " ")
+            file = line[1]
+            x = line[2]
+            y = line[3]
+            width=line[4]
+            height=line[5]
+            
+            if file == "desk" then
+                image="../gfx/filler_desk.png"
+                bodyname="filler_desk"
+            elseif file == "plant" then
+                image ="../gfx/filler_plant.png"
+                bodyname="filler_plant"
+            else
+                image = nil
+            end
+            
+            local objSheet = sprite.newSpriteSheet(image, width, height)
+            local objSet = sprite.newSpriteSet(objSheet,1,1)
+            sprite.add(objSet, "def", 1, 1, 1000)
+            local obj = sprite.newSprite(objSet)
+            obj.x = x
+            obj.y = y
+            obj.xScale = 1
+            obj.yScale = 1
+            physics.addBody(obj, "static", physicsData:get(bodyname))
+            worldgroup:insert(obj)
+        end
+    else
+        print("fail")
+    end
+end
+--end map init
+-----------------------------------------------------------------------
 
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
@@ -347,7 +394,7 @@ init=function()
     --UI button listeners
     bottomListener = function(event)
         --print("bottom hit")
-        levelOver()
+        --levelOver()
         worldgroup:setReferencePoint(display.BottomCenterReferencePoint)
         if worldgroup.y>200 then
             worldgroup:translate(0,-100)
@@ -377,7 +424,7 @@ init=function()
     end
 
     physics.start()
-    --physics.setDrawMode("hybrid")
+    physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     --print("hi")
     disguise="def"
@@ -429,39 +476,10 @@ init=function()
 	worldgroup:insert(enemy2.spr.bound1)
 	worldgroup:insert(enemy2.spr.bound2)
 	
-    --map initialization
-    --read in from file
-    local path = system.pathForFile("test.txt", system.ResourceDirectory)
-    --print(path)
-    local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
-    if fh then
-        while true do
-            local line = fh:read()
-            if line == nil then break end
-            line = split(line, " ")
-            file = line[1]
-            x = line[2]
-            y = line[3]
-            width=line[4]
-            height=line[5]
-            --print(v)
-            local objSheet = sprite.newSpriteSheet(file, width, height)
-            local objSet = sprite.newSpriteSet(objSheet,1,1)
-            sprite.add(objSet, "def", 1, 1, 1000)
-            local obj = sprite.newSprite(objSet)
-            obj.x = x
-            obj.y = y
-            obj.xScale = 1
-            obj.yScale = 1
-            physics.addBody(obj, "static", {bounce =1})
-            worldgroup:insert(obj)
-        end
-    else
-        print("fail")
-    end
-    
----------------------------------------------------------------------
---Initial worldgroup's touch event function
+    --call map init
+    mapinit()
+
+-- OLD worldgroup's touch event function
 -- local moveWorld = function(event)
     -- px = player.spr.x
     -- py = player.spr.y
@@ -474,8 +492,7 @@ init=function()
         -- end
     -- end
 -- end
---
-----------------------------------------------------------------------
+
     -- STOP main.lua's event listener (to free up processing power)
     Runtime:removeEventListener( "enterFrame", gameListener )
 
