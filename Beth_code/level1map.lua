@@ -344,31 +344,52 @@ mapinit=function()
             if line == nil then break end
             line = split(line, " ")
             file = line[1]
-            x = line[2]
-            y = line[3]
-            width=line[4]
-            height=line[5]
-            
-            if file == "desk" then
-                image="../gfx/filler_desk.png"
-                bodyname="filler_desk"
-            elseif file == "plant" then
-                image ="../gfx/filler_plant.png"
-                bodyname="filler_plant"
+            if file == "enemy" then
+                print("enemy")
+                x = line[2]
+                y = line[3]
+                bx = line[4]
+                by = line[5]
+                --image == "../gfx/test_redtile.png"
+                --bodyname = "test_redtile"
+                local obj = Enemy:new(x, y)
+                local loc = obj:getLocation()
+                physics.addBody(obj.spr, enemyBodyRight)
+                obj.spr.angularDamping = 2
+                obj:spawnBounds({x = bx, y = by})
+                obj.spr.collision = boundCollide
+                obj.spr:addEventListener("collision", obj.spr)
+                obj:patrol()
+                worldgroup:insert(obj.spr)
+                worldgroup:insert(obj.spr.bound1)
+                worldgroup:insert(obj.spr.bound2)
             else
-                image = nil
+                print("not enemy")
+                x = line[2]
+                y = line[3]
+                width=line[4]
+                height=line[5]
+                if file == "desk" then
+                    image="../gfx/filler_desk.png"
+                    bodyname="filler_desk"
+                elseif file == "plant" then
+                    image ="../gfx/filler_plant.png"
+                    bodyname="filler_plant"
+                else
+                    image = nil
+                end
+                local objSheet = sprite.newSpriteSheet(image, width, height)
+                local objSet = sprite.newSpriteSet(objSheet,1,1)
+                sprite.add(objSet, "def", 1, 1, 1000)
+                local obj = sprite.newSprite(objSet)
+                obj.x = x
+                obj.y = y
+                obj.xScale = 1
+                obj.yScale = 1
+                physics.addBody(obj, "static", physicsData:get(bodyname))
+                worldgroup:insert(obj)
             end
             
-            local objSheet = sprite.newSpriteSheet(image, width, height)
-            local objSet = sprite.newSpriteSet(objSheet,1,1)
-            sprite.add(objSet, "def", 1, 1, 1000)
-            local obj = sprite.newSprite(objSet)
-            obj.x = x
-            obj.y = y
-            obj.xScale = 1
-            obj.yScale = 1
-            physics.addBody(obj, "static", physicsData:get(bodyname))
-            worldgroup:insert(obj)
         end
     else
         print("fail")
@@ -450,31 +471,31 @@ init=function()
     player.spr.isFixedRotation = true
 
 
-	local enemy1 = Enemy:new(150, 150)
-	local loc = enemy1:getLocation()
-	physics.addBody(enemy1.spr, enemyBodyRight)
-	enemy1.spr.angularDamping = 2
-	enemy1:spawnBounds({x = 125, y = 0})
-	enemy1.spr.collision = boundCollide
-	enemy1.spr:addEventListener("collision", enemy1.spr)
-	enemy1:patrol()
+	-- local enemy1 = Enemy:new(150, 150)
+	-- local loc = enemy1:getLocation()
+	-- physics.addBody(enemy1.spr, enemyBodyRight)
+	-- enemy1.spr.angularDamping = 2
+	-- enemy1:spawnBounds({x = 125, y = 0})
+	-- enemy1.spr.collision = boundCollide
+	-- enemy1.spr:addEventListener("collision", enemy1.spr)
+	-- enemy1:patrol()
 
 
-	local enemy2 = Enemy:new(350, 350)
-	physics.addBody(enemy2.spr, enemyBodyRight)
-	enemy2.spr.angularDamping = 1
-	enemy2:spawnBounds({x = 100, y = 0})
-	enemy2.spr.collision = boundCollide
-	enemy2.spr:addEventListener("collision", enemy2.spr)
-	enemy2:patrol()
+	-- local enemy2 = Enemy:new(350, 350)
+	-- physics.addBody(enemy2.spr, enemyBodyRight)
+	-- enemy2.spr.angularDamping = 1
+	-- enemy2:spawnBounds({x = 100, y = 0})
+	-- enemy2.spr.collision = boundCollide
+	-- enemy2.spr:addEventListener("collision", enemy2.spr)
+	-- enemy2:patrol()
 	
 	worldgroup:insert(player.spr)
-	worldgroup:insert(enemy1.spr)
-	worldgroup:insert(enemy1.spr.bound1)
-	worldgroup:insert(enemy1.spr.bound2)
-	worldgroup:insert(enemy2.spr)
-	worldgroup:insert(enemy2.spr.bound1)
-	worldgroup:insert(enemy2.spr.bound2)
+	-- worldgroup:insert(enemy1.spr)
+	-- worldgroup:insert(enemy1.spr.bound1)
+	-- worldgroup:insert(enemy1.spr.bound2)
+	-- worldgroup:insert(enemy2.spr)
+	-- worldgroup:insert(enemy2.spr.bound1)
+	-- worldgroup:insert(enemy2.spr.bound2)
 	
     --call map init
     mapinit()
