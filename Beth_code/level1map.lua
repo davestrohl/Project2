@@ -433,8 +433,9 @@ init=function()
     --make world group for dragging the world around
     worldgroup=display.newGroup()
     --put big rectangle in world group for touch purposes
-    world = display.newRect(0,0,1056,960)
-    world:setFillColor(128,0,0)
+    --world = display.newRect(0,0,1056,960)
+    --world:setFillColor(128,0,0)
+    world= display.newImage("../gfx/floor.png")
     worldgroup:insert(world)
 
     --UI button listeners
