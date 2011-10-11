@@ -20,47 +20,22 @@ function physicsData(scale)
 	local physics = { data =
 	{ 
 		
-		["filler_desk"] = {
+		["player_sheet"] = {
 			
 				{
 					density = 2, friction = 2, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -47, -109  ,  -180, -238  ,  187, -241  ,  178, -115  }
+					shape = {   -8.67884826660156, 0.888946533203125  ,  6.5802001953125, -44.5845794677734  ,  11.0982971191406, 1.446044921875  ,  13.6052703857422, 46.8499450683594  ,  4.97016906738281, 47.4070587158203  ,  -7.77078247070312, 47.7831115722656  }
 				}  ,
 				{
 					density = 2, friction = 2, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   193.24560546875, 238.263157963753  ,  -183, 228  ,  -41, 99  ,  189, 123  }
+					shape = {   6.5802001953125, -44.5845794677734  ,  -8.67884826660156, 0.888946533203125  ,  -16.1997528076172, 2.00314331054688  ,  -6.01312255859375, -45.1918334960938  }
 				}  ,
 				{
 					density = 2, friction = 2, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -183, 228  ,  -180, -238  ,  -47, -109  ,  -41, 99  }
-				}  
-		}
-		
-		, 
-		["filler_plant"] = {
-			
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -14, 34.5  ,  -31, 21  ,  -32.5, 3.5  ,  -22, -17.5  ,  -0.5, 5.5  ,  14.5, 25  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -2.5, -21.5  ,  -0.5, 5.5  ,  -22, -17.5  ,  -29.5, -31  ,  -13, -41.5  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   -0.5, 5.5  ,  -2.5, -21.5  ,  28.5, -15  ,  50.5, 10  }
-				}  ,
-				{
-					density = 2, friction = 0, bounce = 0, 
-					filter = { categoryBits = 1, maskBits = 65535 },
-					shape = {   28.5, -15  ,  -2.5, -21.5  ,  28, -28.5  }
+					shape = {   11.0982971191406, 1.446044921875  ,  6.5802001953125, -44.5845794677734  ,  17.7835388183594, 1.446044921875  }
 				}  
 		}
 		
