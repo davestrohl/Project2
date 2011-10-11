@@ -515,7 +515,7 @@ init=function()
 	-- enemy2.spr:addEventListener("collision", enemy2.spr)
 	-- enemy2:patrol()
 	
-	worldgroup:insert(player.spr)
+
 	-- worldgroup:insert(enemy1.spr)
 	-- worldgroup:insert(enemy1.spr.bound1)
 	-- worldgroup:insert(enemy1.spr.bound2)
@@ -525,7 +525,7 @@ init=function()
 	
     --call map init
     mapinit()
-
+	worldgroup:insert(player.spr)
 -- OLD worldgroup's touch event function
 -- local moveWorld = function(event)
     -- px = player.spr.x
