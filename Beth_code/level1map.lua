@@ -34,7 +34,7 @@ Player = {x = 0, y = 0, spr = nil, disguised = false}
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 94.5)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 95)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
     sprite.add(playerSet, "down", 1, 6, 1000)
@@ -138,7 +138,7 @@ local function playerTouch(self, event)
                 t:play()
             end
             if hp ~= 0 then
-                t:applyForce( 300*(dx/hp), 300*(dy/hp), t.x, t.y )
+                t:applyForce( (300*(hp/500))*(dx/hp), (300*(hp/500))*(dy/hp), t.x, t.y )
             end
         end
     end
@@ -493,7 +493,7 @@ init=function()
 	
 	player = Player:new(250, 250)
 	physics.addBody(player.spr, playerphysics:get("player_sheet"))
-	player.spr.linearDamping = .8
+	player.spr.linearDamping = 1
     player.spr.isFixedRotation = true
 
 
