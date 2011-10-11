@@ -34,7 +34,7 @@ Player = {x = 0, y = 0, spr = nil, disguised = false}
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 63)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 94.5)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
     sprite.add(playerSet, "down", 1, 6, 1000)
@@ -110,13 +110,36 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line )
 			end
-            if disguise ~= "guard" and disguise ~= "def" then
+            if disguise ~= "guard" and disguise ~= "up" then
             -- t is the player's sprite, so t:pose() can't be used
-                disguise = "def"
+                disguise = "up"
                 t:prepare(disguise)
                 t:play()
             end
-            t:applyForce( (event.x - event.xStart), (event.y - event.yStart), t.x, t.y )
+            dx = event.x - event.xStart
+            dy = event.y - event.yStart
+            hp = (dx^2 + dy^2)^.5
+            print(dx .. " and " .. dy)
+            if dy ~= 0 and dx <= -dy and -dx <= -dy then   --up
+                disguise = "up"
+                t:prepare(disguise)
+                t:play()
+            elseif dx ~= 0 and dy < -dx and -dy < -dx then --left
+                disguise = "left"
+                t:prepare(disguise)
+                t:play()
+            elseif dy ~= 0 and dx <= dy and -dx <= dy then --down
+                disguise = "down"
+                t:prepare(disguise)
+                t:play()
+            else
+                disguise = "right"
+                t:prepare(disguise)
+                t:play()
+            end
+            if hp ~= 0 then
+                t:applyForce( 300*(dx/hp), 300*(dy/hp), t.x, t.y )
+            end
         end
     end
 end
