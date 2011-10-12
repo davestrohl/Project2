@@ -659,8 +659,9 @@ mapinit=function()
                     image ="../gfx/plant.png"
                     bodyname="plant"
                 else
-                    image = nil
+                    image = ""
                 end
+                print(image)
                 local objSheet = sprite.newSpriteSheet(image, width, height)
                 local objSet = sprite.newSpriteSet(objSheet,1,1)
                 sprite.add(objSet, "def", 1, 1, 1000)
