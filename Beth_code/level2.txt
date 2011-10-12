@@ -1,4 +1,8 @@
 world ../gfx/floor2.png
+inviswall 0 0 1440 0
+inviswall 0 960 1440 0
+inviswall 0 0 0 960
+inviswall 1440 0 0 960
 wall ../gfx/museum_walls_bleh.png -322 -322
 wall ../gfx/museum_walls_bleh_flip.png 1248 -322
 wall ../gfx/wall_upright.png 0 -277
@@ -35,9 +39,10 @@ wall ../gfx/wall_side2.png 1440 750
 wall ../gfx/wall_side2.png 1440 835
 wall ../gfx/right_bottom_edge.png 1250 960
 wall ../gfx/left_bottom_edge.png -273 960
-enemy 250 478 1 850 1
+wall ../gfx/wall_upright.png 0 500
+wall ../gfx/wall_upright.png 125 500
+exit 775 0
 camera 750 -10 -270
-desk 576 432 360 480
-plant 428 48 96 192
-plant 428 144 96 192
+plant 420 48 96 192
+plant 520 48 96 192
 plant 432 720 96 192

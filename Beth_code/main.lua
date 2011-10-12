@@ -75,7 +75,7 @@ gameListener = function(event)
     if load_level2map then
         load_level2map = false
         lvl="level2.txt"
-        level1map:init(lvl,100,500)
+        level1map:init(lvl,100,850)
     end
     if level1map.callUnload then
         level1map.callUnload = false --reset switch

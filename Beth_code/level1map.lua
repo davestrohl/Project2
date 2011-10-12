@@ -156,8 +156,9 @@ local function onCollide(self, event)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        levelOver()
                         next_level = "level2map"
+                        levelOver()
+                        
                         print("HIT")
                     end
                     if (disguise == "plant") then
@@ -178,7 +179,7 @@ local function onCollide(self, event)
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level1map"
+                        next_level = "level2map"
                         levelOver()
                         print("HIT")
                     end
@@ -202,7 +203,7 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
-                next_level = "level1map"
+                next_level = "level2map"
                 levelOver()
 				print("HIT")
 			end
@@ -251,7 +252,7 @@ function Player:enterFrame(event)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level1map"
+                        next_level = "level2map"
                         levelOver()
                         print("HIT")
                     end
@@ -275,8 +276,8 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level1map"
+                    if (disguise=="def") then
+                        next_level = "level2map"
                         levelOver()
                         print("HIT")
                     end
@@ -739,6 +740,14 @@ mapinit=function(lvl)
 				worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.pivot)
 				--worldgroup:insert(obj.joint)
+            elseif file == "inviswall" then
+                local x = line[2]
+                local y = line[3]
+                local width = line[4]
+                local height = line[5]
+                iw = display.newRect(x,y,width,height)
+                physics.addBody(iw, "static", {bounce = 0})
+                worldgroup:insert(iw)
             elseif file == "wall" then
                 local w = line[2]
                 local x = line[3]
@@ -754,7 +763,7 @@ mapinit=function(lvl)
 				theExit = obj
 				
 				
-				worldgroup:insert(obj.spr)
+				worldgroup:insert(theExit.spr)
 		   
 			else
                 print("not enemy")
@@ -886,18 +895,18 @@ init=function(lvl,lvl,px,py)
 	theExit = nil
 
     --put invisible walls around the world
-    top = display.newRect(0,0, 1056, 0)
-    physics.addBody(top, "static", {bounce =0})
-    worldgroup:insert(top)
-    bottom = display.newRect(0,960,1056,0)
-    physics.addBody(bottom, "static", {bounce =0})
-    worldgroup:insert(bottom)
-    left = display.newRect(0,0,0,960)
-    physics.addBody(left, "static", {bounce =0})
-    worldgroup:insert(left)
-    right = display.newRect(1056,0,0,960)
-    physics.addBody(right, "static", {bounce =0})
-    worldgroup:insert(right)
+    -- top = display.newRect(0,0, 1056, 0)
+    -- physics.addBody(top, "static", {bounce =0})
+    -- worldgroup:insert(top)
+    -- bottom = display.newRect(0,960,1056,0)
+    -- physics.addBody(bottom, "static", {bounce =0})
+    -- worldgroup:insert(bottom)
+    -- left = display.newRect(0,0,0,960)
+    -- physics.addBody(left, "static", {bounce =0})
+    -- worldgroup:insert(left)
+    -- right = display.newRect(1056,0,0,960)
+    -- physics.addBody(right, "static", {bounce =0})
+    -- worldgroup:insert(right)
     
 
 	
