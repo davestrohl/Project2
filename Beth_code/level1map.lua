@@ -50,14 +50,14 @@ function Player:new(x, y)
     sprite.add(playerSet, "plant", 32, 1, 1000)
     sprite.add(playerSet, "statue", 33, 1, 1000)
     --sprite.add(playerSet, "statue2", 34, 1, 1000)
-    sprite.add(playerSet, "idle", 37, 3, 1500)
+    sprite.add(playerSet, "defidle", 37, 3, 1500)
     
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
 
     
-    player:prepare("idle")
+    player:prepare("defidle")
     player:play()
     
     self.spr = player
@@ -170,7 +170,7 @@ end
 local function onCollide(self, event)	
 
 	if(event.phase == "began") then	
-		if(event.other == g.spr) then
+		if(event.other == theExit.spr) then
 			physics.pause()
 			print("HOLY SHIT YOU WON!!!")
             next_level = "level2map"
@@ -732,7 +732,7 @@ local levelLoop = function (event)
     --player:pose()
     vx, vy = player.spr:getLinearVelocity()
     if vx == 0 and vx == 0 and disguise == "def" then
-        disguise = "idle"
+        direction = "idle"
         player:pose()
     end
 end
