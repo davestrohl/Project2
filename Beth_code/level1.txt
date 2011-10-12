@@ -1,3 +1,4 @@
+world ../gfx/floor.png
 wall ../gfx/museum_walls_bleh.png -322 -322
 wall ../gfx/museum_walls_bleh_flip.png 864 -322
 wall ../gfx/wall_upright.png 0 -277
