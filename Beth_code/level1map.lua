@@ -625,7 +625,11 @@ mapinit=function()
             if line == nil then break end
             line = split(line, " ")
             file = line[1]
-            if file == "enemy" then
+            if file == "world" then
+                local w = line[2]
+                world= display.newImage(w)
+                worldgroup:insert(world)
+            elseif file == "enemy" then
                 print("enemy")
                 local x = line[2]
                 local y = line[3]
@@ -663,7 +667,7 @@ mapinit=function()
                 local y = line[4]
                 wall= display.newImage(w,x,y)
                 worldgroup:insert(wall)
-                
+           
 			else
                 print("not enemy")
                 x = line[2]
@@ -711,8 +715,7 @@ init=function()
     --put big rectangle in world group for touch purposes
     --world = display.newRect(0,0,1056,960)
     --world:setFillColor(128,0,0)
-    world= display.newImage("../gfx/floor.png")
-    worldgroup:insert(world)
+    
     -- wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
     -- worldgroup:insert(wallcornerlu)
     -- wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
