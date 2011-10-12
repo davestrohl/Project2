@@ -176,14 +176,19 @@ local function onCollide(self, event)
                         print("HIT")
                     end
                     if (disguise == "plant") then
-                        --[[local p = plantList
+                        local p = plantList
+                        local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
-                                print("HIT")
-                                levelOver()
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                                hit = false
                             end
                         end
-                        print("UNHIT")]]
+                        if hit then
+                                print("HIT")
+                                levelOver()
+                        end
+                        print("UNHIT")
+                        print(disguise)
                     end
 					--LOSE
 				end
@@ -199,14 +204,19 @@ local function onCollide(self, event)
                         print("HIT")
                     end
                     if (disguise == "plant") then
-                        --[[local p = plantList
+                        local p = plantList
+                        local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
-                                print("HIT")
-                                levelOver()
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                                hit = false
                             end
                         end
-                        print("UNHIT")]]
+                        if hit then
+                                print("HIT")
+                                levelOver()
+                        end
+                        print("UNHIT")
+                        print(disguise)
                     end
 				end
 			end
@@ -274,14 +284,18 @@ function Player:enterFrame(event)
                         print("HIT")
                     end
                     if (disguise == "plant") then
-                        --[[local p = plantList
+                        local p = plantList
+                        local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
-                                print("HIT")
-                                levelOver()
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                                hit = false
                             end
                         end
-                        print("UNHIT")]]
+                        if hit then
+                                print("HIT")
+                                levelOver()
+                        end
+                        print("UNHIT")
                         print(disguise)
                     end
 					--LOSE
@@ -300,14 +314,18 @@ function Player:enterFrame(event)
                         print("HIT")
                     end
                     if (disguise == "plant") then
-                        --[[local p = plantList
+                        local p = plantList
+                        local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
-                                print("HIT")
-                                levelOver()
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                                hit = false
                             end
                         end
-                        print("UNHIT")]]
+                        if hit then
+                                print("HIT")
+                                levelOver()
+                        end
+                        print("UNHIT")
                         print(disguise)
                     end
 				elseif((l.value.orientation == 0 and l.value.physDot.direction == 'r') or (l.value.orientation == 1 and l.value.physDot.direction == 'u')) then
