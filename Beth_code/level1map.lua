@@ -550,7 +550,7 @@ cameraShape = {0,0 , 200, -300 , 200,300}
 cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
 pivotBody = {friction = 0.7, isSensor = true}
 
-Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, rotation = 0}
+Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, timerHandle = nil, rotation = 0}
 function Camera:new(x, y, rotation)
 	self.x = x; self.y = y; self.rotation = rotation
 	
@@ -577,7 +577,7 @@ function Camera:new(x, y, rotation)
 
 
 
-	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc}
+	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc, timerHandle = self.timerHandle}
 	setmetatable(object, {__index = Camera})
 	self.spr.super = object
 	
@@ -619,7 +619,7 @@ function Camera:enterFrame(event)
 	--print(lim1 .. " and " .. lim2)
 	if(self.joint.jointAngle <= lim1 or self.joint.jointAngle >= lim2) then
 		if(not self.timerProc) then
-			timer.performWithDelay(2000, self, 1)
+			self.timerHandle = timer.performWithDelay(2000, self, 1)
 			self.timerProc = true
 		end
 	elseif(self.joint.jointAngle >= lim1 and self.joint.jointAngle <= lim2) then
@@ -635,7 +635,7 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-----------------------------Exit  
+----------------------------Exit-------------------------
 ExitDoor = {x = 0, y = 0, spr = nil}
 
 function ExitDoor:new(x, y)
@@ -1072,6 +1072,9 @@ unloadMe = function()
     
     local l = cameraList
     while l do
+		if(l.value.timerHandle) then
+			timer.cancel(l.value.timerHandle)
+		end
         Runtime:removeEventListener("enterFrame", l.value)
         l = l.list
      end
