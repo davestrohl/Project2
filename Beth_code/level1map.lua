@@ -263,7 +263,7 @@ function Enemy:new(x, y, orientation, pathLen)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../ball_white.png", 72,72)
+	local enemySheet = sprite.newSpriteSheet("../gfx/plant.png", 72,72)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
 	sprite.add(enemySet, "patrol", 1, 1, 1000)
 	
