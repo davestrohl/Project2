@@ -35,14 +35,18 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 165)
-    local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 166)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 34)
     --Set up animations for all the costumes
     sprite.add(playerSet, "defdown", 1, 6, 1000)
     sprite.add(playerSet, "defup", 7, 6, 1000)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
-    --sprite.add(playerSet, "dino", 6, 6, 5000)
+    sprite.add(playerSet, "guard", 25, 6, 1000)
+    sprint.add(playerSet, "plant", 31, 1, 1000)
+    sprite.add(playerSet, "dino", 32, 1, 1000)
+    sprite.add(playerSet, "statue1", 33, 1, 1000)
+    sprite.add(playerSet, "statue2", 34, 1, 1000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -68,7 +72,11 @@ function Player:pose()
         if disguise == "guard" then
             guardsLeft = guardsLeft - 1
         end
-        self.spr:prepare(disguise .. direction)
+        if disguise == "def" then
+            self.spr:prepare(disguise .. direction)
+        else
+            self.spr:prepare(disguise)
+        end
         self.spr:play()
     end
     --self.disguised = true
@@ -155,8 +163,10 @@ local function onCollide(self, event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level2map"
+
+                    if (disguise == "def") then
+                        next_level = "level1map"
+
                         levelOver()
                         
                         print("HIT")
@@ -178,8 +188,9 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level2map"
+
+                    if (disguise == "def") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -203,9 +214,11 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
-                next_level = "level2map"
-                levelOver()
-				print("HIT")
+                if (disguise == "def") then
+                    next_level = "level1map"
+                    levelOver()
+                    print("HIT")
+                end
 			end
 			l = l.next
 		end
@@ -251,8 +264,8 @@ function Player:enterFrame(event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level2map"
+                    if (disguise == "def") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -276,8 +289,9 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise=="def") then
-                        next_level = "level2map"
+
+                    if (disguise == "def") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -336,17 +350,20 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../gfx/plant.png", 72,72)
-	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
-	sprite.add(enemySet, "patrol", 1, 1, 1000)
+	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 72, 166)
+	local enemySet = sprite.newSpriteSet(enemySheet, 1, 24)
+	sprite.add(enemySet, "down", 1, 6, 1000)
+    sprite.add(enemySet, "up", 7, 6, 1000)
+    sprite.add(enemySet, "right", 13, 6, 1000)
+    sprite.add(enemySet, "left", 19, 6, 1000)
 	
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
 	enemy.y = y
-	enemy.xScale = 0.5
-	enemy.yScale = 0.5
+	-- enemy.xScale = 0.5
+	-- enemy.yScale = 0.5
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
-    enemy:prepare("patrol")
+    enemy:prepare("down")
     enemy:play()
 	
 	if(self.orientation == 0) then
@@ -491,6 +508,8 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollisionLeft
 		player:addEventListener("collision", player)]]
+        self.spr:prepare("left")
+        self.spr:play()
 		self.spr:setLinearVelocity(-30, 0)
 		self.physDot:setLinearVelocity(-30, 0)
 
@@ -504,16 +523,20 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollideRight
 		player:addEventListener("collision", player)]]
-		
+		self.spr:prepare("right")
+        self.spr:play()
 		self.spr:setLinearVelocity(30, 0)
 		self.physDot:setLinearVelocity(30, 0)
 		
 	elseif(self.spr.direction == 'u') then
+        self.spr:prepare("up")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, -30)
 		self.physDot:setLinearVelocity(0, -30)
 		
 	elseif(self.spr.direction == 'd') then
-
+        self.spr:prepare("down")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, 30)
 		self.physDot:setLinearVelocity(0, 30)
 		
@@ -532,7 +555,7 @@ cameraShape = {0,0 , 200, -300 , 200,300}
 cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
 pivotBody = {friction = 0.7, isSensor = true}
 
-Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, rotation = 0}
+Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, timerHandle = nil, rotation = 0}
 function Camera:new(x, y, rotation)
 	self.x = x; self.y = y; self.rotation = rotation
 	
@@ -559,7 +582,7 @@ function Camera:new(x, y, rotation)
 
 
 
-	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc}
+	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc, timerHandle = self.timerHandle}
 	setmetatable(object, {__index = Camera})
 	self.spr.super = object
 	
@@ -601,7 +624,7 @@ function Camera:enterFrame(event)
 	--print(lim1 .. " and " .. lim2)
 	if(self.joint.jointAngle <= lim1 or self.joint.jointAngle >= lim2) then
 		if(not self.timerProc) then
-			timer.performWithDelay(2000, self, 1)
+			self.timerHandle = timer.performWithDelay(2000, self, 1)
 			self.timerProc = true
 		end
 	elseif(self.joint.jointAngle >= lim1 and self.joint.jointAngle <= lim2) then
@@ -617,7 +640,7 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-----------------------------Exit  
+----------------------------Exit-------------------------
 ExitDoor = {x = 0, y = 0, spr = nil}
 
 function ExitDoor:new(x, y)
@@ -1066,7 +1089,10 @@ unloadMe = function()
     
     local l = cameraList
     while l do
-        Runtime:removeEventListener("enterFrame", l.value)timer.cancel(Camera)
+		if(l.value.timerHandle) then
+			timer.cancel(l.value.timerHandle)
+		end
+        Runtime:removeEventListener("enterFrame", l.value)
         l = l.list
      end
      

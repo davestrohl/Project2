@@ -51,12 +51,14 @@ end
 
 function defpush()
     if next_level=="level1map" then
-        level1map.disguise = "up"
+        level1map.disguise = "def"
+        level1map.direction = "down"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
         end
     elseif next_level =="level2map" then
-        level2map.disguise = "up"
+        level1map.disguise = "def"
+        level1map.direction = "down"
         if level2map.player.spr.sequence ~= level2map.disguise then
             level2map.player:pose()
         end
