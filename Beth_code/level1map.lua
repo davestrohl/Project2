@@ -167,9 +167,12 @@ local function onCollide(self, event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
+
                         levelOver()
+                        
                         print("HIT")
                     end
                     if (disguise == "plant") then
@@ -189,6 +192,7 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
@@ -289,6 +293,7 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
@@ -662,7 +667,7 @@ end
 levelOver = function()
     Runtime: addEventListener("enterFrame", gameListener)
     --next_level = "level2map"
-    print(next_level)
+    --print(next_level)
     callUnload = true
 end
 -----------------------------------------------------------------------
@@ -716,6 +721,7 @@ end
 mapinit=function(lvl)
 --map initialization
     --read in from file
+    print("initializing map for lvl"..lvl)
     local path = system.pathForFile(lvl, system.ResourceDirectory)
     --print(path)
     local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
@@ -761,6 +767,14 @@ mapinit=function(lvl)
 				worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.pivot)
 				--worldgroup:insert(obj.joint)
+            elseif file == "inviswall" then
+                local x = line[2]
+                local y = line[3]
+                local width = line[4]
+                local height = line[5]
+                iw = display.newRect(x,y,width,height)
+                physics.addBody(iw, "static", {bounce = 0})
+                worldgroup:insert(iw)
             elseif file == "wall" then
                 local w = line[2]
                 local x = line[3]
@@ -776,7 +790,7 @@ mapinit=function(lvl)
 				theExit = obj
 				
 				
-				worldgroup:insert(obj.spr)
+				worldgroup:insert(theExit.spr)
 		   
 			else
                 print("not enemy")
@@ -908,18 +922,18 @@ init=function(lvl,lvl,px,py)
 	theExit = nil
 
     --put invisible walls around the world
-    top = display.newRect(0,0, 1056, 0)
-    physics.addBody(top, "static", {bounce =0})
-    worldgroup:insert(top)
-    bottom = display.newRect(0,960,1056,0)
-    physics.addBody(bottom, "static", {bounce =0})
-    worldgroup:insert(bottom)
-    left = display.newRect(0,0,0,960)
-    physics.addBody(left, "static", {bounce =0})
-    worldgroup:insert(left)
-    right = display.newRect(1056,0,0,960)
-    physics.addBody(right, "static", {bounce =0})
-    worldgroup:insert(right)
+    -- top = display.newRect(0,0, 1056, 0)
+    -- physics.addBody(top, "static", {bounce =0})
+    -- worldgroup:insert(top)
+    -- bottom = display.newRect(0,960,1056,0)
+    -- physics.addBody(bottom, "static", {bounce =0})
+    -- worldgroup:insert(bottom)
+    -- left = display.newRect(0,0,0,960)
+    -- physics.addBody(left, "static", {bounce =0})
+    -- worldgroup:insert(left)
+    -- right = display.newRect(1056,0,0,960)
+    -- physics.addBody(right, "static", {bounce =0})
+    -- worldgroup:insert(right)
     
 
 	
@@ -1073,6 +1087,9 @@ unloadMe = function()
     -- also, don't forget to stop any timers that you created
     -- example:
     -- timer.cancel( myTimer )
+    
+        
+    
     
     local l = cameraList
     while l do
