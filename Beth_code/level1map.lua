@@ -158,6 +158,8 @@ local function onCollide(self, event)
 		if(event.other == theExit.spr) then
 			physics.pause()
 			print("HOLY SHIT YOU WON!!!")
+            next_level = "level2map"
+            levelOver()
 		end
 		local l = enemyList
 		while l do
@@ -390,8 +392,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
 	enemy.y = y
-	-- enemy.xScale = 0.5
-	-- enemy.yScale = 0.5
+
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
     enemy:prepare("down")
     enemy:play()
@@ -589,23 +590,23 @@ Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = ni
 function Camera:new(x, y, rotation)
 	self.x = x; self.y = y; self.rotation = rotation
 	
-	--[[local cameraSheet = sprite.newSpriteSheet("ball_white.png", 72,72)
+	local cameraSheet = sprite.newSpriteSheet("../gfx/cmarea_red.png", 384,384)
 	local cameraSet = sprite.newSpriteSet(cameraSheet, 1, 1)
 	sprite.add(cameraSet, "scan", 1, 1, 1000)
 	
-	local camera = sprite.newSprite(cameraSet)]]
+	local camera = sprite.newSprite(cameraSet)
 	--self.spr = display.newImage("ball_white.png")
-	self.spr = display.newRect(self.x, self.y - 5, 100, 10)
-	self.spr.x = x
-	self.spr.y = y
-	--[[camera.x = x
+	--self.spr = display.newRect(self.x, self.y - 5, 100, 10)
+	--self.spr.x = x
+	--self.spr.y = y
+	camera.x = x
 	camera.y = y
-	camera.xScale = 0.5
-	camera.yScale = 0.5
+	camera.xScale = 0.25
+	camera.yScale = 0.25
     camera:prepare("scan")
-    camera:play()]]
+    camera:play()
 	
-	--self.spr = camera
+	self.spr = camera
 	
 	self.spr.direction = self.initDirection
 	self.pivot = display.newRect(self.x - 5 , self.y - 5, 10, 10)

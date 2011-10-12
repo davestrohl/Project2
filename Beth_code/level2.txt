@@ -41,6 +41,11 @@ wall ../gfx/right_bottom_edge.png 1250 960
 wall ../gfx/left_bottom_edge.png -273 960
 wall ../gfx/wall_upright.png 0 500
 wall ../gfx/wall_upright.png 125 500
+wall ../gfx/wall_upright.png 250 500
+wall ../gfx/wall_upright.png 375 500
+wall ../gfx/wall_upright.png 500 500
+wall ../gfx/wall_upright.png 625 500
+wall ../gfx/wall_upright.png 750 500
 exit 775 0
 camera 750 -10 -270
 plant 420 48 96 192

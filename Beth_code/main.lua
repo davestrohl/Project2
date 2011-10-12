@@ -15,14 +15,23 @@ local viewableScreenW, viewableScreenH = display.viewableContentWidth, display.v
 
 -- UI buttons -add buttons for moving map
 local button_maker = function()
-    top_button = display.newRect(190,0, 100, 20)
-    top_button:setFillColor(0,0,255)
-    bottom_button = display.newRect(190,854,100,-20)
-    bottom_button:setFillColor(0,0,255)
-    left_button = display.newRect(0,427,20,100)
-    left_button:setFillColor(0,0,255)
-    right_button = display.newRect(480,427, -20, 100)
-    right_button:setFillColor(0,0,255)
+    --top_button = display.newRect(190,0, 100, 20)
+    --top_button:setFillColor(0,0,255)
+	top_button = display.newImage("../gfx/arrow.png")
+	top_button.x = 240; top_button.y = 10
+	
+   -- bottom_button = display.newRect(190,854,100,-20)
+    --bottom_button:setFillColor(0,0,255)
+	bottom_button = display.newImage("../gfx/arrow.png")
+	bottom_button.x = 240; bottom_button.y = 844; bottom_button.rotation = 180
+    --left_button = display.newRect(0,427,20,100)
+    --left_button:setFillColor(0,0,255)
+	left_button = display.newImage("../gfx/arrow.png")
+	left_button.x = 10; left_button.y = 427; left_button.rotation = -90
+    --right_button = display.newRect(480,427, -20, 100)
+    --right_button:setFillColor(0,0,255)
+	right_button = display.newImage("../gfx/arrow.png")
+	right_button.x = 470; right_button.y = 427; right_button.rotation = 90
 end
 
     
