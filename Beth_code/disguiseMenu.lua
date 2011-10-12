@@ -5,7 +5,7 @@ function init()
     --print(next_level)
     
     local menuBG = display.newRect(0, 0, display.contentWidth, display.contentHeight)
-    menuBG:setFillColor(200, 0, 200, 200)
+    menuBG:setFillColor(0, 0, 0, 200)
     disguiseG:insert(menuBG)
     
     -- playButton = display.newRect(140,700, 200, 80)

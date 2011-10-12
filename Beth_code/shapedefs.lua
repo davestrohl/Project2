@@ -40,27 +40,22 @@ function physicsData(scale)
 		}
 		
 		, 
-		["dinosaur"] = {
-			
-		}
-		
-		, 
-		["statue"] = {
-			
-		}
-		
-		, 
-		["statue_2"] = {
-			
-		}
-		
-		, 
 		["plant"] = {
 			
 				{
 					density = 2, friction = 0, bounce = 0, 
 					filter = { categoryBits = 1, maskBits = 65535 },
 					shape = {   -39, -78.5  ,  34.5, -84  ,  47.5, 16  ,  -50, 20.5  }
+				}  
+		}
+		
+		, 
+		["wall_upright"] = {
+			
+				{
+					density = 2, friction = 0, bounce = 0, 
+					filter = { categoryBits = 1, maskBits = 65535 },
+					shape = {   67, -139.5  ,  65, 72.5  ,  -64, 71.5  ,  -64, -140.5  }
 				}  
 		}
 		
