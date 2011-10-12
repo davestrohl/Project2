@@ -343,7 +343,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 112, 165)
+	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 72, 166)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 24)
 	sprite.add(enemySet, "down", 1, 6, 1000)
     sprite.add(enemySet, "up", 7, 6, 1000)
@@ -353,8 +353,8 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
 	enemy.y = y
-	enemy.xScale = 0.5
-	enemy.yScale = 0.5
+	--enemy.xScale = 0.5
+	--enemy.yScale = 0.5
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
     enemy:prepare("down")
     enemy:play()
@@ -552,23 +552,23 @@ Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = ni
 function Camera:new(x, y, rotation)
 	self.x = x; self.y = y; self.rotation = rotation
 	
-	--[[local cameraSheet = sprite.newSpriteSheet("ball_white.png", 72,72)
+	local cameraSheet = sprite.newSpriteSheet("../gfx/cmarea_red.png", 384,384)
 	local cameraSet = sprite.newSpriteSet(cameraSheet, 1, 1)
 	sprite.add(cameraSet, "scan", 1, 1, 1000)
 	
-	local camera = sprite.newSprite(cameraSet)]]
+	local camera = sprite.newSprite(cameraSet)
 	--self.spr = display.newImage("ball_white.png")
-	self.spr = display.newRect(self.x, self.y - 5, 100, 10)
-	self.spr.x = x
-	self.spr.y = y
-	--[[camera.x = x
+	--self.spr = display.newRect(self.x, self.y - 5, 100, 10)
+	--self.spr.x = x
+	--self.spr.y = y
+	camera.x = x
 	camera.y = y
-	camera.xScale = 0.5
-	camera.yScale = 0.5
+	camera.xScale = 0.25
+	camera.yScale = 0.25
     camera:prepare("scan")
-    camera:play()]]
+    camera:play()
 	
-	--self.spr = camera
+	self.spr = camera
 	
 	self.spr.direction = self.initDirection
 	self.pivot = display.newRect(self.x - 5 , self.y - 5, 10, 10)
