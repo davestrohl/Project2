@@ -664,6 +664,13 @@ mapinit=function()
 				worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.pivot)
 				--worldgroup:insert(obj.joint)
+            elseif file == "wall" then
+                local w = line[2]
+                local x = line[3]
+                local y = line[4]
+                wall= display.newImage(w,x,y)
+                worldgroup:insert(wall)
+                
 			else
                 print("not enemy")
                 x = line[2]
@@ -691,7 +698,6 @@ mapinit=function()
                 physics.addBody(obj, "static", physicsData:get(bodyname))
                 worldgroup:insert(obj)
             end
-            
         end
     else
         print("fail")
@@ -714,24 +720,32 @@ init=function()
     --world:setFillColor(128,0,0)
     world= display.newImage("../gfx/floor.png")
     worldgroup:insert(world)
-    wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
-    worldgroup:insert(wallcornerlu)
-    wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
-    worldgroup:insert(wallcornerru)
-    i = 0
-    while i<1056 do 
-        wall = display.newImage("../gfx/wall_upright.png",i,-277)
-        i=i+125
-        worldgroup:insert(wall)
-    end
-    i = 0
-    while i<960 do
-        wall = display.newImage("../gfx/wall_side.png", -277,i)
-        wall2 = display.newImage("../gfx/wall_side2.png",1056,i)
-        i= i+125
-        worldgroup:insert(wall)
-        worldgroup:insert(wall2)
-    end
+    -- wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
+    -- worldgroup:insert(wallcornerlu)
+    -- wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
+    -- worldgroup:insert(wallcornerru)
+    -- wallcornerrd=display.newImage("../gfx/right_bottom_edge.png", 1056,960)
+    -- worldgroup:insert(wallcornerrd)
+    -- i = 0
+    -- while i<900 do 
+        -- wall = display.newImage("../gfx/wall_upright.png",i,-277)
+        -- i = i+125
+        -- worldgroup:insert(wall)
+    -- end
+    -- i = 0
+    -- while i<700 do
+        -- wall2 = display.newImage("../gfx/bottom_bottom_edge.png", i, 1000)
+        -- i=i+125
+        -- worldgroup:insert(wall2)
+    -- end
+    -- i = 0
+    -- while i<800 do
+        -- wall = display.newImage("../gfx/wall_side.png", -277,i)
+        -- wall2 = display.newImage("../gfx/wall_side2.png",1056,i)
+        -- i= i+125
+        -- worldgroup:insert(wall)
+        -- worldgroup:insert(wall2)
+    -- end
         
     
     
