@@ -28,7 +28,7 @@ function Player:new(x, y)
     
     self.spr = player
     
-    local object = {x = x, y = y, spr = self.spr, isTouching = self.isTouching, touchedObject = self.touchedObject}
+    local object = {x = x, y = y, spr = self.spr, diguised = self.disguised, isTouching = self.isTouching, touchedObject = self.touchedObject}
     setmetatable(object, {__index = Player})
     self.spr.super = object
     return object
@@ -117,11 +117,15 @@ function Enemy:new(x, y, orientation, pathLen)
     enemy:prepare("patrol")
     enemy:play()
 	
+	print(self.orientation)
+	print(self.orientation == 0)
 	if(self.orientation == 0) then
 		self.initDirection = 'r'
 	else
 		self.initDirection = 'u'
 	end
+	
+	print(self.initDirection)
 	
 	self.spr = enemy
 	self.physDot = display.newRect(self.x - 5 , self.y - 5, 10, 10)
