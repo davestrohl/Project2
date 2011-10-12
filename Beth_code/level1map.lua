@@ -179,12 +179,14 @@ local function onCollide(self, event)
                         local p = plantList
                         local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                            if ((self.x - p.value.x)^2 + (self.y - p.value.y)^2 )^.5 <= 200 then
                                 hit = false
                             end
+                            p = p.next
                         end
                         if hit then
                                 print("HIT")
+                                next_level = "level1map"
                                 levelOver()
                         end
                         print("UNHIT")
@@ -207,12 +209,14 @@ local function onCollide(self, event)
                         local p = plantList
                         local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                            if ((self.x - p.value.x)^2 + (self.y - p.value.y)^2 )^.5 <= 200 then
                                 hit = false
                             end
+                            p = p.next
                         end
                         if hit then
                                 print("HIT")
+                                next_level = "level1map"
                                 levelOver()
                         end
                         print("UNHIT")
@@ -287,12 +291,14 @@ function Player:enterFrame(event)
                         local p = plantList
                         local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                            if ((self.spr.x - p.value.x)^2 + (self.spr.y - p.value.y)^2 )^.5 <= 200 then
                                 hit = false
                             end
+                            p = p.next
                         end
                         if hit then
                                 print("HIT")
+                                next_level = "level1map"
                                 levelOver()
                         end
                         print("UNHIT")
@@ -317,12 +323,14 @@ function Player:enterFrame(event)
                         local p = plantList
                         local hit = true
                         while p do
-                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 <= 200 then
+                            if ((self.spr.x - p.value.x)^2 + (self.spr.y - p.value.y)^2 )^.5 <= 200 then
                                 hit = false
                             end
+                            p = p.next
                         end
                         if hit then
                                 print("HIT")
+                                next_level = "level1map"
                                 levelOver()
                         end
                         print("UNHIT")
