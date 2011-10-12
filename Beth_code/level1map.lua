@@ -620,10 +620,10 @@ end
 --------------------------------------------------------------------
 --map read in function
 
-mapinit=function()
+mapinit=function(lvl)
 --map initialization
     --read in from file
-    local path = system.pathForFile("level1.txt", system.ResourceDirectory)
+    local path = system.pathForFile(lvl, system.ResourceDirectory)
     --print(path)
     local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
     if fh then
@@ -716,7 +716,10 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-init=function()
+init=function(lvl,lvl,px,py)
+    print(px)
+    print(py)
+    print(lvl)
     --make world group for dragging the world around
     worldgroup=display.newGroup()
     --put big rectangle in world group for touch purposes
@@ -811,7 +814,7 @@ init=function()
     
 
 	
-	player = Player:new(50, 100)
+	player = Player:new(px, py)
 	physics.addBody(player.spr, playerphysics:get("player_sheet"))
 	player.spr.linearDamping = 1
     player.spr.isFixedRotation = true
@@ -866,7 +869,7 @@ init=function()
 	-- worldgroup:insert(enemy2.spr.bound2)
 	
     --call map init
-    mapinit()
+    mapinit(lvl)
 	worldgroup:insert(player.spr)
 -- OLD worldgroup's touch event function
 -- local moveWorld = function(event)
