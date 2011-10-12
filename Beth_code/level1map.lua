@@ -42,7 +42,9 @@ function Player:new(x, y)
     sprite.add(playerSet, "defup", 7, 6, 1000)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
-    --sprite.add(playerSet, "dino", 6, 6, 5000)
+    --[[sprite.add(playerSet, "guard", 25, 6, 1000)
+    sprint.add(playerSet, "plant", 31, 6, 1000)]]
+    --sprite.add(playerSet, "dino", 6, 6, 1000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -68,7 +70,11 @@ function Player:pose()
         if disguise == "guard" then
             guardsLeft = guardsLeft - 1
         end
-        self.spr:prepare(disguise .. direction)
+        if disguise == "def" then
+            self.spr:prepare(disguise .. direction)
+        else
+            self.spr:prepare(disguise)
+        end
         self.spr:play()
     end
     --self.disguised = true
@@ -202,9 +208,11 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
-                next_level = "level1map"
-                levelOver()
-				print("HIT")
+                if (disguise == "def") then
+                    next_level = "level1map"
+                    levelOver()
+                    print("HIT")
+                end
 			end
 			l = l.next
 		end
@@ -335,9 +343,12 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../gfx/plant.png", 72,72)
-	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
-	sprite.add(enemySet, "patrol", 1, 1, 1000)
+	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 112, 165)
+	local enemySet = sprite.newSpriteSet(enemySheet, 1, 24)
+	sprite.add(enemySet, "down", 1, 6, 1000)
+    sprite.add(enemySet, "up", 7, 6, 1000)
+    sprite.add(enemySet, "right", 13, 6, 1000)
+    sprite.add(enemySet, "left", 19, 6, 1000)
 	
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
@@ -345,7 +356,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	enemy.xScale = 0.5
 	enemy.yScale = 0.5
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
-    enemy:prepare("patrol")
+    enemy:prepare("down")
     enemy:play()
 	
 	if(self.orientation == 0) then
@@ -490,6 +501,8 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollisionLeft
 		player:addEventListener("collision", player)]]
+        self.spr:prepare("left")
+        self.spr:play()
 		self.spr:setLinearVelocity(-30, 0)
 		self.physDot:setLinearVelocity(-30, 0)
 
@@ -503,16 +516,20 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollideRight
 		player:addEventListener("collision", player)]]
-		
+		self.spr:prepare("right")
+        self.spr:play()
 		self.spr:setLinearVelocity(30, 0)
 		self.physDot:setLinearVelocity(30, 0)
 		
 	elseif(self.spr.direction == 'u') then
+        self.spr:prepare("up")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, -30)
 		self.physDot:setLinearVelocity(0, -30)
 		
 	elseif(self.spr.direction == 'd') then
-
+        self.spr:prepare("down")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, 30)
 		self.physDot:setLinearVelocity(0, 30)
 		
