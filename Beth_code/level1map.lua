@@ -50,14 +50,14 @@ function Player:new(x, y)
     sprite.add(playerSet, "plant", 32, 1, 1000)
     sprite.add(playerSet, "statue", 33, 1, 1000)
     --sprite.add(playerSet, "statue2", 34, 1, 1000)
-    sprite.add(playerSet, "idle", 37, 3, 1500)
+    --sprite.add(playerSet, "idle", 37, 3, 1500)
     
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
 
     
-    player:prepare("idle")
+    player:prepare("defdown")
     player:play()
     
     self.spr = player
@@ -132,7 +132,6 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line )
 			end
-            print(disguise)
             if disguise ~= "guard" and disguise ~= "def" then
             -- t is the player's sprite, so t:pose() can't be used
                 disguise = "def"
@@ -143,7 +142,7 @@ local function playerTouch(self, event)
             dx = event.x - event.xStart
             dy = event.y - event.yStart
             hp = (dx^2 + dy^2)^.5
-            --print(dx .. " and " .. dy)
+            print(dx .. " and " .. dy)
             if dy ~= 0 and dx <= -dy and -dx <= -dy then   --up
                 direction = "up"
             elseif dx ~= 0 and dy < -dx and -dy < -dx then --left
@@ -153,7 +152,6 @@ local function playerTouch(self, event)
             else
                 direction = "right"
             end
-            print(disguise)
             if disguise == "def" then
                 t:prepare(disguise .. direction)
             else
@@ -730,11 +728,7 @@ local levelLoop = function (event)
     ]]--
     --print(disguise)
     --player:pose()
-    vx, vy = player.spr:getLinearVelocity()
-    if vx == 0 and vx == 0 and disguise == "def" then
-        disguise = "idle"
-        player:pose()
-    end
+
 end
 
 
@@ -834,10 +828,8 @@ mapinit=function(lvl)
 				local obj = ExitDoor:new(x,y)
 				obj:init()
 				theExit = obj
-				
-				
 				worldgroup:insert(theExit.spr)
-		   
+            
 			else
                 print("not enemy")
                 x = line[2]
