@@ -13,7 +13,8 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 ------------------------------------------------------------
 --Globals - to be accessed from main.lua
 callUnload = false
-disguise="down"
+disguise="def"
+direction = "down"
 guardsLeft = 5
 --------------------------------------------------------------------
 local next_level = "level2map"
@@ -34,22 +35,22 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 95)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 165)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
-    sprite.add(playerSet, "down", 1, 6, 1000)
-    sprite.add(playerSet, "up", 7, 6, 1000)
-    sprite.add(playerSet, "right", 13, 6, 1000)
-    sprite.add(playerSet, "left", 19, 6, 1000)
+    sprite.add(playerSet, "defdown", 1, 6, 1000)
+    sprite.add(playerSet, "defup", 7, 6, 1000)
+    sprite.add(playerSet, "defright", 13, 6, 1000)
+    sprite.add(playerSet, "defleft", 19, 6, 1000)
     --sprite.add(playerSet, "dino", 6, 6, 5000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
-	player.xScale = 1.75
-	player.yScale = 1.75
+	-- player.xScale = 1.75
+	-- player.yScale = 1.75
     
-    player:prepare("down")
+    player:prepare("defdown")
     player:play()
     
     self.spr = player
@@ -68,7 +69,7 @@ function Player:pose()
         if disguise == "guard" then
             guardsLeft = guardsLeft - 1
         end
-        self.spr:prepare(disguise)
+        self.spr:prepare(disguise .. direction)
         self.spr:play()
     end
     --self.disguised = true
@@ -119,10 +120,11 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line )
 			end
-            if disguise ~= "guard" and disguise ~= "up" then
+            if disguise ~= "guard" and disguise ~= "def" then
             -- t is the player's sprite, so t:pose() can't be used
-                disguise = "up"
-                t:prepare(disguise)
+                disguise = "def"
+                direction = "up"
+                t:direction(disguise .. direction)
                 t:play()
             end
             dx = event.x - event.xStart
@@ -130,22 +132,16 @@ local function playerTouch(self, event)
             hp = (dx^2 + dy^2)^.5
             print(dx .. " and " .. dy)
             if dy ~= 0 and dx <= -dy and -dx <= -dy then   --up
-                disguise = "up"
-                t:prepare(disguise)
-                t:play()
+                direction = "up"
             elseif dx ~= 0 and dy < -dx and -dy < -dx then --left
-                disguise = "left"
-                t:prepare(disguise)
-                t:play()
+                direction = "left"
             elseif dy ~= 0 and dx <= dy and -dx <= dy then --down
-                disguise = "down"
-                t:prepare(disguise)
-                t:play()
+                direction = "down"
             else
-                disguise = "right"
-                t:prepare(disguise)
-                t:play()
+                direction = "right"
             end
+            t:prepare(disguise .. direction)
+            t:play()
             if hp ~= 0 then
                 t:applyForce( (300*(hp/500))*(dx/hp), (300*(hp/500))*(dy/hp), t.x, t.y )
             end
