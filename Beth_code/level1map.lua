@@ -34,7 +34,7 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 63)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 95)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
     sprite.add(playerSet, "down", 1, 6, 1000)
@@ -110,13 +110,36 @@ local function playerTouch(self, event)
             if ( line ) then
 				line.parent:remove( line )
 			end
-            if disguise ~= "guard" and disguise ~= "def" then
+            if disguise ~= "guard" and disguise ~= "up" then
             -- t is the player's sprite, so t:pose() can't be used
-                disguise = "def"
+                disguise = "up"
                 t:prepare(disguise)
                 t:play()
             end
-            t:applyForce( (event.x - event.xStart), (event.y - event.yStart), t.x, t.y )
+            dx = event.x - event.xStart
+            dy = event.y - event.yStart
+            hp = (dx^2 + dy^2)^.5
+            print(dx .. " and " .. dy)
+            if dy ~= 0 and dx <= -dy and -dx <= -dy then   --up
+                disguise = "up"
+                t:prepare(disguise)
+                t:play()
+            elseif dx ~= 0 and dy < -dx and -dy < -dx then --left
+                disguise = "left"
+                t:prepare(disguise)
+                t:play()
+            elseif dy ~= 0 and dx <= dy and -dx <= dy then --down
+                disguise = "down"
+                t:prepare(disguise)
+                t:play()
+            else
+                disguise = "right"
+                t:prepare(disguise)
+                t:play()
+            end
+            if hp ~= 0 then
+                t:applyForce( (300*(hp/500))*(dx/hp), (300*(hp/500))*(dy/hp), t.x, t.y )
+            end
         end
     end
 end
@@ -250,7 +273,7 @@ function Enemy:new(x, y, orientation, pathLen)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../ball_white.png", 72,72)
+	local enemySheet = sprite.newSpriteSheet("../gfx/plant.png", 72,72)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
 	sprite.add(enemySet, "patrol", 1, 1, 1000)
 	
@@ -603,7 +626,6 @@ mapinit=function()
 				local orientation = line[4] + 0
 				
 				local dist = line[5]
-				
                 --image == "../gfx/test_redtile.png"
                 --bodyname = "test_redtile"
                 local obj = Enemy:new(x, y, orientation, dist)
@@ -612,6 +634,7 @@ mapinit=function()
 				worldgroup:insert(obj.physDot)
                 worldgroup:insert(obj.spr.bound1)
                 worldgroup:insert(obj.spr.bound2)
+                
             elseif file == "camera" then
 				print("camera")
 				print(line[2])
@@ -668,8 +691,28 @@ init=function()
     --make world group for dragging the world around
     worldgroup=display.newGroup()
     --put big rectangle in world group for touch purposes
-    world = display.newRect(0,0,1056,960)
-    world:setFillColor(128,0,0)
+    --world = display.newRect(0,0,1056,960)
+    --world:setFillColor(128,0,0)
+    world= display.newImage("../gfx/floor.png")
+    wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
+    worldgroup:insert(wallcornerlu)
+    wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
+    i = 0
+    while i<1056 do 
+        wall = display.newImage("../gfx/wall_upright.png",i,-277)
+        i=i+125
+        worldgroup:insert(wall)
+    end
+    i = 0
+    while i<960 do
+        wall = display.newImage("../gfx/wall_side.png", -277,i)
+        wall2 = display.newImage("../gfx/wall_side2.png",1056,i)
+        i= i+125
+        worldgroup:insert(wall)
+        worldgroup:insert(wall2)
+    end
+        
+    worldgroup:insert(wallcornerru)
     worldgroup:insert(world)
 
     --UI button listeners
@@ -705,7 +748,7 @@ init=function()
     end
 
     physics.start()
-    physics.setDrawMode("hybrid")
+    --physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     --print("hi")
 
@@ -732,7 +775,7 @@ init=function()
 	
 	player = Player:new(250, 250)
 	physics.addBody(player.spr, playerphysics:get("player_sheet"))
-	player.spr.linearDamping = .8
+	player.spr.linearDamping = 1
     player.spr.isFixedRotation = true
 	
 	--local line = display.newLine(50, 50, 100,100)
@@ -776,7 +819,7 @@ init=function()
 	-- enemy2.spr:addEventListener("collision", enemy2.spr)
 	-- enemy2:patrol()
 	
-	worldgroup:insert(player.spr)
+
 	-- worldgroup:insert(enemy1.spr)
 	-- worldgroup:insert(enemy1.spr.bound1)
 	-- worldgroup:insert(enemy1.spr.bound2)
@@ -786,7 +829,7 @@ init=function()
 	
     --call map init
     mapinit()
-
+	worldgroup:insert(player.spr)
 -- OLD worldgroup's touch event function
 -- local moveWorld = function(event)
     -- px = player.spr.x
