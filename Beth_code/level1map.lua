@@ -49,8 +49,7 @@ function Player:new(x, y)
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
-	-- player.xScale = 1.75
-	-- player.yScale = 1.75
+
     
     player:prepare("defdown")
     player:play()
@@ -96,14 +95,6 @@ end
 function Player:setLocation( loc )
 	self.spr.x = loc.x; self.spr.y = loc.y
 end
-
-function Player:init()
-
-
-	print("yo")
-	
-end
-
 
 local function playerTouch(self, event)
     local t = event.target
@@ -158,6 +149,10 @@ end
 local function onCollide(self, event)	
 
 	if(event.phase == "began") then	
+		if(event.other == theExit.spr) then
+			physics.pause()
+			print("HOLY SHIT YOU WON!!!")
+		end
 		local l = enemyList
 		while l do
 			if(l.value.spr == event.other) then
@@ -629,6 +624,23 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+----------------------------Exit  
+ExitDoor = {x = 0, y = 0, spr = nil}
+
+function ExitDoor:new(x, y)
+	self.x = x; self.y = y
+	
+	self.spr = display.newRect(self.x, self.y, 100,100)
+	
+	object = {x = self.x, y = self.y, spr = self.spr}
+	setmetatable(object, {__index = ExitDoor})
+	return object
+end
+
+function ExitDoor:init()
+	physics.addBody(self.spr)
+end
+	
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -740,7 +752,17 @@ mapinit=function(lvl)
                 local y = line[4]
                 wall= display.newImage(w,x,y)
                 worldgroup:insert(wall)
-           
+            elseif file == "exit" then
+				print("exit door")
+				local x = line[2] + 0
+				local y = line[3] + 0
+				local obj = ExitDoor:new(x,y)
+				obj:init()
+				theExit = obj
+				
+				
+				worldgroup:insert(obj.spr)
+		   
 			else
                 print("not enemy")
                 x = line[2]
@@ -766,7 +788,11 @@ mapinit=function(lvl)
                 obj.xScale = 1
                 obj.yScale = 1
                 physics.addBody(obj, "static", physicsData:get(bodyname))
+				if file == "plant" then
+					plantList = {next = plantList, value = obj}
+				end
                 worldgroup:insert(obj)
+				
             end
         end
     else
@@ -863,6 +889,8 @@ init=function(lvl,lvl,px,py)
     disguise="def"
 	enemyList = nil
 	cameraList = nil
+	plantList = nil
+	theExit = nil
 
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
