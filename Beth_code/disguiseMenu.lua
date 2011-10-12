@@ -15,7 +15,10 @@ function init()
     -- default disguise
     defButton = display.newRect(90, 700, 300, 100)
     defButton:setFillColor(255,255,255)
+    defText = display.newText("No Disguise", 115, 730, "Helvetica", 42)
+    defText:setTextColor(0,0,0)
     disguiseG:insert(defButton)
+    disguiseG:insert(defText)
     
     --plant disguise
     plantButton = display.newImage("../gfx/paper_plant.png", 70, 100)
