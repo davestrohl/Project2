@@ -51,12 +51,12 @@ end
 
 function defpush()
     if next_level=="level1map" then
-        level1map.disguise = "def"
+        level1map.disguise = "up"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
         end
     elseif next_level =="level2map" then
-        level2map.disguise = "def"
+        level2map.disguise = "up"
         if level2map.player.spr.sequence ~= level2map.disguise then
             level2map.player:pose()
         end
@@ -67,31 +67,35 @@ function plantpush()
     -- print(level1map.disguise)
     -- print("you hit the plant buttton")
     if next_level=="level1map" then
-        level1map.disguise ="plant"
+        level1map.disguise ="down"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
         end
+        level1map.disguise ="plant"
     elseif next_level =="level2map" then
-        level2map.disguise ="plant"
+        level2map.disguise ="down"
         if level2map.player.spr.sequence ~= level2map.disguise then
             level2map.player:pose()
         end
+        level2map.disguise ="plant"
     end
 end
 
 function guardpush()
     if next_level=="level1map" then
-        level1map.disguise = "guard"
+        level1map.disguise = "left"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
             numGuards.text = level1map.guardsLeft
         end
+        level1map.disguise ="guard"
     elseif next_level =="level2map" then
-        level2map.disguise = "guard"
+        level2map.disguise = "left"
         if level2map.player.spr.sequence ~= level2map.disguise then
             level2map.player:pose()
             numGuards.text = level2map.guardsLeft
         end
+        level1map.disguise ="guard"
     end
 end
 
