@@ -90,14 +90,6 @@ function Player:setLocation( loc )
 	self.spr.x = loc.x; self.spr.y = loc.y
 end
 
-function Player:init()
-
-
-	print("yo")
-	
-end
-
-
 local function playerTouch(self, event)
     local t = event.target
     if event.phase == "began" then
