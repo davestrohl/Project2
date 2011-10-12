@@ -16,7 +16,7 @@ callUnload = false
 disguise="down"
 guardsLeft = 5
 --------------------------------------------------------------------
-
+local next_level = "level2map"
 
 
 
@@ -165,6 +165,7 @@ local function onCollide(self, event)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -186,6 +187,7 @@ local function onCollide(self, event)
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -209,6 +211,7 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
+                next_level = "level1map"
                 levelOver()
 				print("HIT")
 			end
@@ -257,6 +260,7 @@ function Player:enterFrame(event)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -281,6 +285,7 @@ function Player:enterFrame(event)
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        next_level = "level1map"
                         levelOver()
                         print("HIT")
                     end
@@ -1018,6 +1023,13 @@ unloadMe = function()
     -- also, don't forget to stop any timers that you created
     -- example:
     -- timer.cancel( myTimer )
+    
+    local l = cameraList
+    while l do
+        Runtime:removeEventListener("enterFrame", l.value)
+        l = l.list
+     end
+     
 
 
     --remove groups and objects
@@ -1026,7 +1038,7 @@ unloadMe = function()
 
     -- collect any/all garbage
     collectgarbage( "collect" )
-    return "level2map"
+    return next_level
     end
 --end unloadme
 -----------------------------------------------------------------------
