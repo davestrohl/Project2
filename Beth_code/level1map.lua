@@ -781,7 +781,7 @@ init=function()
     player.spr.isFixedRotation = true
 	
 	--local line = display.newLine(50, 50, 100,100)
-	--line:append(0,0, 50,50)
+	--line:append( 0,100, 50,50, 50,50)
 	--line:setFillColor(0,200,0)
 	 --local star = display.newLine( 0,-110, 27,-35 )
   --star:append( 105,-35, 43,16, 65,90, 0,45, -65,90, -43,15, -105,-35, -27,-35, 0,-110 )
