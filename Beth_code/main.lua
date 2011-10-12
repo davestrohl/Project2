@@ -59,26 +59,24 @@ gameListener = function(event)
         loadNext()
     end
 
+--NOTE: LEVEL1MAP.LUA REFERS TO ALL LEVELS - sorry for confusion :/
 --LEVEL 1 MAP
     if load_level1map then
         load_level1map =  false --reset switch
-        level1map:init() --call init function
+        lvl="level1.txt"
+        level1map:init(lvl,100,500) --call init function
     end
+--LEVEL 2 MAP
+    if load_level2map then
+        load_level2map = false
+        lvl="level2.txt"
+        level1map:init(lvl,100,500)
+    end
+    
     if level1map.callUnload then
         level1map.callUnload = false --reset switch
         next_level = level1map:unloadMe() -- call unload function
         loadNext() -- load next levelmap
-    end
-
---LEVEL 2 MAP
-    if load_level2map then
-        load_level2map = false
-        level2map:init()
-    end
-    if level2map.callUnload then
-        level2map.callUnload = false
-        level2map.unloadMe()
-        loadNext()
     end
 end
 
