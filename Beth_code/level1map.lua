@@ -555,6 +555,8 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+----------------------------Exit  
+
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -666,7 +668,15 @@ mapinit=function()
                 local y = line[4]
                 wall= display.newImage(w,x,y)
                 worldgroup:insert(wall)
-           
+            --[[elseif file == "exit" then
+				print("exit door")
+				local x = line[2] + 0
+				local y = line[3] + 0
+				local obj = ExitDoor:new(x,y)
+				obj:init()
+				
+				worldgroup:insert(obj.spr)]]
+		   
 			else
                 print("not enemy")
                 x = line[2]
@@ -692,7 +702,11 @@ mapinit=function()
                 obj.xScale = 1
                 obj.yScale = 1
                 physics.addBody(obj, "static", physicsData:get(bodyname))
+				if file == "plant" then
+					plantList = {next = plantList, value = obj}
+				end
                 worldgroup:insert(obj)
+				
             end
         end
     else
@@ -786,6 +800,7 @@ init=function()
     disguise="def"
 	enemyList = nil
 	cameraList = nil
+	plantList = nil
 
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
