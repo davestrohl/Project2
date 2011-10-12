@@ -436,6 +436,25 @@ init=function()
     --world = display.newRect(0,0,1056,960)
     --world:setFillColor(128,0,0)
     world= display.newImage("../gfx/floor.png")
+    wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
+    worldgroup:insert(wallcornerlu)
+    wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
+    i = 0
+    while i<1056 do 
+        wall = display.newImage("../gfx/wall_upright.png",i,-277)
+        i=i+125
+        worldgroup:insert(wall)
+    end
+    i = 0
+    while i<960 do
+        wall = display.newImage("../gfx/wall_side.png", -277,i)
+        wall2 = display.newImage("../gfx/wall_side2.png",1056,i)
+        i= i+125
+        worldgroup:insert(wall)
+        worldgroup:insert(wall2)
+    end
+        
+    worldgroup:insert(wallcornerru)
     worldgroup:insert(world)
 
     --UI button listeners
