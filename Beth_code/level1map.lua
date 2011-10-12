@@ -42,7 +42,9 @@ function Player:new(x, y)
     sprite.add(playerSet, "defup", 7, 6, 1000)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
-    --sprite.add(playerSet, "dino", 6, 6, 5000)
+    --[[sprite.add(playerSet, "guard", 25, 6, 1000)
+    sprint.add(playerSet, "plant", 31, 6, 1000)]]
+    --sprite.add(playerSet, "dino", 6, 6, 1000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -69,7 +71,11 @@ function Player:pose()
         if disguise == "guard" then
             guardsLeft = guardsLeft - 1
         end
-        self.spr:prepare(disguise .. direction)
+        if disguise == "def" then
+            self.spr:prepare(disguise .. direction)
+        else
+            self.spr:prepare(disguise)
+        end
         self.spr:play()
     end
     --self.disguised = true
@@ -207,9 +213,11 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
-                next_level = "level1map"
-                levelOver()
-				print("HIT")
+                if (disguise == "def") then
+                    next_level = "level1map"
+                    levelOver()
+                    print("HIT")
+                end
 			end
 			l = l.next
 		end
