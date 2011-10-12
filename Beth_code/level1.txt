@@ -1,4 +1,8 @@
 world ../gfx/floor.png
+inviswall 0 0 1056 0
+inviswall 0 960 1056 0
+inviswall 0 0 0 960
+inviswall 1056 0 0 960
 wall ../gfx/museum_walls_bleh.png -322 -322
 wall ../gfx/museum_walls_bleh_flip.png 864 -322
 wall ../gfx/wall_upright.png 0 -277

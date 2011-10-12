@@ -35,16 +35,18 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 165)
-    local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 166)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 34)
     --Set up animations for all the costumes
     sprite.add(playerSet, "defdown", 1, 6, 1000)
     sprite.add(playerSet, "defup", 7, 6, 1000)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
-    --[[sprite.add(playerSet, "guard", 25, 6, 1000)
-    sprint.add(playerSet, "plant", 31, 6, 1000)]]
-    --sprite.add(playerSet, "dino", 6, 6, 1000)
+    sprite.add(playerSet, "guard", 25, 6, 1000)
+    sprite.add(playerSet, "dino", 31, 1, 1000)
+    sprite.add(playerSet, "plant", 32, 1, 1000)
+    sprite.add(playerSet, "statue1", 33, 1, 1000)
+    sprite.add(playerSet, "statue2", 34, 1, 1000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -121,8 +123,8 @@ local function playerTouch(self, event)
             -- t is the player's sprite, so t:pose() can't be used
                 disguise = "def"
                 direction = "up"
-                t:direction(disguise .. direction)
-                t:play()
+                t:prepare(disguise .. direction)
+                --t:play()
             end
             dx = event.x - event.xStart
             dy = event.y - event.yStart
@@ -137,7 +139,11 @@ local function playerTouch(self, event)
             else
                 direction = "right"
             end
-            t:prepare(disguise .. direction)
+            if disguise == "def" then
+                t:prepare(disguise .. direction)
+            else
+                t:prepare(disguise)
+            end
             t:play()
             if hp ~= 0 then
                 t:applyForce( (300*(hp/500))*(dx/hp), (300*(hp/500))*(dy/hp), t.x, t.y )
@@ -161,9 +167,12 @@ local function onCollide(self, event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
+
                         levelOver()
+                        
                         print("HIT")
                     end
                     if (disguise == "plant") then
@@ -183,6 +192,7 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
@@ -283,6 +293,7 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
+
                     if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
@@ -353,8 +364,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
 	enemy.y = y
-	--enemy.xScale = 0.5
-	--enemy.yScale = 0.5
+
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
     enemy:prepare("down")
     enemy:play()
@@ -656,7 +666,7 @@ end
 levelOver = function()
     Runtime: addEventListener("enterFrame", gameListener)
     --next_level = "level2map"
-    print(next_level)
+    --print(next_level)
     callUnload = true
 end
 -----------------------------------------------------------------------
@@ -710,6 +720,7 @@ end
 mapinit=function(lvl)
 --map initialization
     --read in from file
+    print("initializing map for lvl"..lvl)
     local path = system.pathForFile(lvl, system.ResourceDirectory)
     --print(path)
     local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
@@ -755,6 +766,14 @@ mapinit=function(lvl)
 				worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.pivot)
 				--worldgroup:insert(obj.joint)
+            elseif file == "inviswall" then
+                local x = line[2]
+                local y = line[3]
+                local width = line[4]
+                local height = line[5]
+                iw = display.newRect(x,y,width,height)
+                physics.addBody(iw, "static", {bounce = 0})
+                worldgroup:insert(iw)
             elseif file == "wall" then
                 local w = line[2]
                 local x = line[3]
@@ -770,7 +789,7 @@ mapinit=function(lvl)
 				theExit = obj
 				
 				
-				worldgroup:insert(obj.spr)
+				worldgroup:insert(theExit.spr)
 		   
 			else
                 print("not enemy")
@@ -902,18 +921,18 @@ init=function(lvl,lvl,px,py)
 	theExit = nil
 
     --put invisible walls around the world
-    top = display.newRect(0,0, 1056, 0)
-    physics.addBody(top, "static", {bounce =0})
-    worldgroup:insert(top)
-    bottom = display.newRect(0,960,1056,0)
-    physics.addBody(bottom, "static", {bounce =0})
-    worldgroup:insert(bottom)
-    left = display.newRect(0,0,0,960)
-    physics.addBody(left, "static", {bounce =0})
-    worldgroup:insert(left)
-    right = display.newRect(1056,0,0,960)
-    physics.addBody(right, "static", {bounce =0})
-    worldgroup:insert(right)
+    -- top = display.newRect(0,0, 1056, 0)
+    -- physics.addBody(top, "static", {bounce =0})
+    -- worldgroup:insert(top)
+    -- bottom = display.newRect(0,960,1056,0)
+    -- physics.addBody(bottom, "static", {bounce =0})
+    -- worldgroup:insert(bottom)
+    -- left = display.newRect(0,0,0,960)
+    -- physics.addBody(left, "static", {bounce =0})
+    -- worldgroup:insert(left)
+    -- right = display.newRect(1056,0,0,960)
+    -- physics.addBody(right, "static", {bounce =0})
+    -- worldgroup:insert(right)
     
 
 	
@@ -1067,6 +1086,9 @@ unloadMe = function()
     -- also, don't forget to stop any timers that you created
     -- example:
     -- timer.cancel( myTimer )
+    
+        
+    
     
     local l = cameraList
     while l do
