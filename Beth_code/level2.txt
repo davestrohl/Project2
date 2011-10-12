@@ -1,0 +1,43 @@
+world ../gfx/floor2.png
+wall ../gfx/museum_walls_bleh.png -322 -322
+wall ../gfx/museum_walls_bleh_flip.png 1248 -322
+wall ../gfx/wall_upright.png 0 -277
+wall ../gfx/wall_upright.png 125 -277
+wall ../gfx/wall_upright.png 250 -277
+wall ../gfx/wall_upright.png 375 -277
+wall ../gfx/wall_upright.png 500 -277
+wall ../gfx/wall_upright.png 625 -277
+wall ../gfx/wall_upright.png 750 -277
+wall ../gfx/wall_upright.png 875 -277
+wall ../gfx/wall_upright.png 1000 -277
+wall ../gfx/wall_upright.png 1125 -277
+wall ../gfx/wall_upright.png 1250 -277
+wall ../gfx/wall_upright.png 1315 -277
+wall ../gfx/bottom_bottom_bottom_edge.png 0 960
+wall ../gfx/bottom_bottom_bottom_edge.png 440 960
+wall ../gfx/bottom_bottom_bottom_edge.png 880 960
+wall ../gfx/bottom_bottom_bottom_edge.png 1000 960
+wall ../gfx/wall_side.png -277 0
+wall ../gfx/wall_side.png -277 125
+wall ../gfx/wall_side.png -277 250
+wall ../gfx/wall_side.png -277 375
+wall ../gfx/wall_side.png -277 500
+wall ../gfx/wall_side.png -277 625
+wall ../gfx/wall_side.png -277 750
+wall ../gfx/wall_side.png -277 835
+wall ../gfx/wall_side.png -277 0
+wall ../gfx/wall_side2.png 1440 125
+wall ../gfx/wall_side2.png 1440 250
+wall ../gfx/wall_side2.png 1440 375
+wall ../gfx/wall_side2.png 1440 500
+wall ../gfx/wall_side2.png 1440 625
+wall ../gfx/wall_side2.png 1440 750
+wall ../gfx/wall_side2.png 1440 835
+wall ../gfx/right_bottom_edge.png 1250 960
+wall ../gfx/left_bottom_edge.png -273 960
+enemy 250 478 1 850 1
+camera 750 -10 -270
+desk 576 432 360 480
+plant 428 48 96 192
+plant 428 144 96 192
+plant 432 720 96 192
