@@ -165,8 +165,8 @@ local function onCollide(self, event)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
                     if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
-                        next_level = "level1map"
                         levelOver()
+                        next_level = "level2map"
                         print("HIT")
                     end
                     if (disguise == "plant") then
@@ -631,7 +631,7 @@ end
 levelOver = function()
     Runtime: addEventListener("enterFrame", gameListener)
     --next_level = "level2map"
-    print(next_level)
+    --print(next_level)
     callUnload = true
 end
 -----------------------------------------------------------------------
@@ -685,6 +685,7 @@ end
 mapinit=function(lvl)
 --map initialization
     --read in from file
+    print("initializing map for lvl"..lvl)
     local path = system.pathForFile(lvl, system.ResourceDirectory)
     --print(path)
     local fh= io.open(path, "r") -- io.open opens a file at path - returns nil if no file found
@@ -1027,9 +1028,12 @@ unloadMe = function()
     -- example:
     -- timer.cancel( myTimer )
     
+        
+    
+    
     local l = cameraList
     while l do
-        Runtime:removeEventListener("enterFrame", l.value)
+        Runtime:removeEventListener("enterFrame", l.value)timer.cancel(Camera)
         l = l.list
      end
      
