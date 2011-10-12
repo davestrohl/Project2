@@ -694,9 +694,11 @@ init=function()
     --world = display.newRect(0,0,1056,960)
     --world:setFillColor(128,0,0)
     world= display.newImage("../gfx/floor.png")
+    worldgroup:insert(world)
     wallcornerlu = display.newImage("../gfx/museum_walls_bleh.png",-322,-322)
     worldgroup:insert(wallcornerlu)
     wallcornerru = display.newImage("../gfx/museum_walls_bleh_flip.png",864,-322)
+    worldgroup:insert(wallcornerru)
     i = 0
     while i<1056 do 
         wall = display.newImage("../gfx/wall_upright.png",i,-277)
@@ -712,8 +714,8 @@ init=function()
         worldgroup:insert(wall2)
     end
         
-    worldgroup:insert(wallcornerru)
-    worldgroup:insert(world)
+    
+    
 
     --UI button listeners
     bottomListener = function(event)
