@@ -168,7 +168,7 @@ end
 local function onCollide(self, event)	
 
 	if(event.phase == "began") then	
-		if(event.other == g.spr) then
+		if(event.other == theExit.spr) then
 			physics.pause()
 			print("HOLY SHIT YOU WON!!!")
             next_level = "level2map"
