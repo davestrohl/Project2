@@ -17,8 +17,8 @@ function init()
     defButton:setFillColor(255,255,255)
     disguiseG:insert(defButton)
     --plant disguise
-    plantButton = display.newRect(90, 200, 100, 100)
-    plantButton:setFillColor(0,255,0)
+    plantButton = display.newImage("../gfx/paper_plant.png", 90, 100)
+    --plantButton:setFillColor(0,255,0)
     disguiseG:insert(plantButton)
     --security guard disguise
     guardButton = display.newRect(290, 200, 100, 100)
@@ -69,11 +69,10 @@ function plantpush()
     -- print(level1map.disguise)
     -- print("you hit the plant buttton")
     if next_level=="level1map" then
-        level1map.disguise ="down"
+        level1map.disguise ="plant"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
         end
-        level1map.disguise ="plant"
     elseif next_level =="level2map" then
         level2map.disguise ="down"
         if level2map.player.spr.sequence ~= level2map.disguise then
@@ -85,12 +84,11 @@ end
 
 function guardpush()
     if next_level=="level1map" then
-        level1map.disguise = "left"
+        level1map.disguise ="guard"
         if level1map.player.spr.sequence ~= level1map.disguise then
             level1map.player:pose()
             numGuards.text = level1map.guardsLeft
         end
-        level1map.disguise ="guard"
     elseif next_level =="level2map" then
         level2map.disguise = "left"
         if level2map.player.spr.sequence ~= level2map.disguise then

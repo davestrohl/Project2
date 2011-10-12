@@ -43,8 +43,8 @@ function Player:new(x, y)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
     sprite.add(playerSet, "guard", 25, 6, 1000)
-    sprint.add(playerSet, "plant", 31, 1, 1000)
-    sprite.add(playerSet, "dino", 32, 1, 1000)
+    sprite.add(playerSet, "dino", 31, 1, 1000)
+    sprite.add(playerSet, "plant", 32, 1, 1000)
     sprite.add(playerSet, "statue1", 33, 1, 1000)
     sprite.add(playerSet, "statue2", 34, 1, 1000)
     
@@ -123,8 +123,8 @@ local function playerTouch(self, event)
             -- t is the player's sprite, so t:pose() can't be used
                 disguise = "def"
                 direction = "up"
-                t:direction(disguise .. direction)
-                t:play()
+                t:prepare(disguise .. direction)
+                --t:play()
             end
             dx = event.x - event.xStart
             dy = event.y - event.yStart
@@ -139,7 +139,11 @@ local function playerTouch(self, event)
             else
                 direction = "right"
             end
-            t:prepare(disguise .. direction)
+            if disguise == "def" then
+                t:prepare(disguise .. direction)
+            else
+                t:prepare(disguise)
+            end
             t:play()
             if hp ~= 0 then
                 t:applyForce( (300*(hp/500))*(dx/hp), (300*(hp/500))*(dy/hp), t.x, t.y )
