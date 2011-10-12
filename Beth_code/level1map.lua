@@ -158,6 +158,8 @@ local function onCollide(self, event)
 		if(event.other == theExit.spr) then
 			physics.pause()
 			print("HOLY SHIT YOU WON!!!")
+            next_level = "level2map"
+            levelOver()
 		end
 		local l = enemyList
 		while l do
