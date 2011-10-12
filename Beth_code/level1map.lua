@@ -162,17 +162,43 @@ local function onCollide(self, event)
 				self.super.isTouching = true
 				self.super.touchedObject = event.other
 				--print(l.value.orientation)
-				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-					print("HIT")
+                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        levelOver()
+                        print("HIT")
+                    end
+                    if (disguise == "plant") then
+                        --[[local p = plantList
+                        while p do
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
+                                print("HIT")
+                                levelOver()
+                            end
+                        end
+                        print("UNHIT")]]
+                    end
 					--LOSE
 				end
 			elseif(l.value.physDot == event.other) then
 				self.super.isTouching = true
 				self.super.touchedObject = event.other
-				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
+				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-					print("HIT")
+                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        levelOver()
+                        print("HIT")
+                    end
+                    if (disguise == "plant") then
+                        --[[local p = plantList
+                        while p do
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
+                                print("HIT")
+                                levelOver()
+                            end
+                        end
+                        print("UNHIT")]]
+                    end
 				end
 			end
 			l = l.next
@@ -183,6 +209,7 @@ local function onCollide(self, event)
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
 				--background:setFillColor(255,0,0)
+                levelOver()
 				print("HIT")
 			end
 			l = l.next
@@ -227,21 +254,51 @@ function Player:enterFrame(event)
 			while l do
 			if(l.value.spr == self.touchedObject) then
 				--print(l.value.orientation)
-				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
+				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-					print("HIT")
+                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        levelOver()
+                        print("HIT")
+                    end
+                    if (disguise == "plant") then
+                        --[[local p = plantList
+                        while p do
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
+                                print("HIT")
+                                levelOver()
+                            end
+                        end
+                        print("UNHIT")]]
+                        print(disguise)
+                    end
 					--LOSE
 				elseif((l.value.orientation == 0 and l.value.spr.direction == 'l') or (l.value.orientation == 1 and l.value.spr.direction == 'd')) then
 					--background:setFillColor(0,0,200)
 					print("UNHIT")
+                    --print(disguise)
 				end
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-					print("HIT")
+                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                        levelOver()
+                        print("HIT")
+                    end
+                    if (disguise == "plant") then
+                        --[[local p = plantList
+                        while p do
+                            if ((self.x - p.x)^2 + (self.y - p.y)^2 )^.5 > 200 then
+                                print("HIT")
+                                levelOver()
+                            end
+                        end
+                        print("UNHIT")]]
+                        print(disguise)
+                    end
 				elseif((l.value.orientation == 0 and l.value.physDot.direction == 'r') or (l.value.orientation == 1 and l.value.physDot.direction == 'u')) then
 					--background:setFillColor(0,0,200)
 					print("UNHIT")
+                    -- print(disguise)
 				end
 			end
 			l = l.next
@@ -566,7 +623,7 @@ end
 --
 -----------------------------------------------------------------------
 --  Level Over function
-local levelOver = function()
+levelOver = function()
     Runtime: addEventListener("enterFrame", gameListener)
     --next_level = "level2map"
     print(next_level)
