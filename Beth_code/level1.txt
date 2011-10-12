@@ -32,7 +32,7 @@ wall ../gfx/wall_side2.png 1056 835
 wall ../gfx/right_bottom_edge.png 866 960
 wall ../gfx/left_bottom_edge.png -273 960
 exit 775 0
-enemy 250 478 1 850 1
+enemy 250 478 0 850 1
 camera 750 -10 -270
 desk 576 432 360 480
 plant 428 48 96 192

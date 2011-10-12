@@ -343,7 +343,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 112, 165)
+	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 72, 166)
 	local enemySet = sprite.newSpriteSet(enemySheet, 1, 24)
 	sprite.add(enemySet, "down", 1, 6, 1000)
     sprite.add(enemySet, "up", 7, 6, 1000)
@@ -353,8 +353,8 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
 	enemy.y = y
-	enemy.xScale = 0.5
-	enemy.yScale = 0.5
+	-- enemy.xScale = 0.5
+	-- enemy.yScale = 0.5
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
     enemy:prepare("down")
     enemy:play()
