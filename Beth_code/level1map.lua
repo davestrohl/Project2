@@ -15,7 +15,10 @@ physics.setGravity( 0, 0 ) -- overhead view, therefore no gravity vector
 callUnload = false
 disguise="def"
 direction = "down"
-guardsLeft = 5
+guardsLeft = 1
+plantsLeft = 2
+dinosLeft = 1
+statuesLeft = 1
 --------------------------------------------------------------------
 local next_level = "level2map"
 
@@ -36,7 +39,7 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 function Player:new(x, y)
     self.x = x; self.y = y
     local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 166)
-    local playerSet = sprite.newSpriteSet(playerSheet, 1, 34)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 42)
     --Set up animations for all the costumes
     sprite.add(playerSet, "defdown", 1, 6, 1000)
     sprite.add(playerSet, "defup", 7, 6, 1000)
@@ -45,8 +48,9 @@ function Player:new(x, y)
     sprite.add(playerSet, "guard", 25, 6, 1000)
     sprite.add(playerSet, "dino", 31, 1, 1000)
     sprite.add(playerSet, "plant", 32, 1, 1000)
-    sprite.add(playerSet, "statue1", 33, 1, 1000)
-    sprite.add(playerSet, "statue2", 34, 1, 1000)
+    sprite.add(playerSet, "statue", 33, 1, 1000)
+    --sprite.add(playerSet, "statue2", 34, 1, 1000)
+    --sprite.add(playerSet, "idle", 37, 3, 1500)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -68,9 +72,18 @@ end
 function Player:pose()
     -- print("posing")
     -- print(disguise)
-    if disguise ~= "guard" or (disguise == "guard" and guardsLeft ~= 0) then
+    if disguise == "def" or (disguise == "guard" and guardsLeft ~= 0) or (disguise == "plant" and plantsLeft ~= 0) or (disguise == "dino" and dinosLeft ~= 0) or (disguise == "statue" and statuesLeft ~= 0) then
         if disguise == "guard" then
             guardsLeft = guardsLeft - 1
+        end
+        if disguise == "plant" then
+            plantsLeft = plantsLeft - 1
+        end
+        if disguise == "dino" then
+            dinosLeft = dinosLeft - 1
+        end
+        if disguise == "statue" then
+            statuesLeft = statuesLeft - 1
         end
         if disguise == "def" then
             self.spr:prepare(disguise .. direction)
