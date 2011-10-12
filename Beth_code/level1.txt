@@ -32,8 +32,3 @@ wall ../gfx/right_bottom_edge.png 866 960
 wall ../gfx/left_bottom_edge.png -273 960
 enemy 150 150 0 125
 enemy 350 350 1 200
-camera 250 500 60
-desk 576 432 360 480
-plant 528 48 96 192
-plant 528 144 96 192
-plant 432 720 96 192

@@ -46,6 +46,8 @@ function Player:new(x, y)
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
+	player.xScale = 1.75
+	player.yScale = 1.75
     
     player:prepare("down")
     player:play()
@@ -258,10 +260,10 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------    Enemy
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
-viewRight = {0,0 , 80,-30 , 80,30}
-viewLeft = {0,0 , -80,30 , -80,-30}
-viewUp = {0,0 , -30,-80 , 30,-80}
-viewDown = {0,0 , 30,80 , -30,80}
+viewRight = {0,0 , 450,-30 , 450,30}
+viewLeft = {0,0 , -450,30 , -450,-30}
+viewUp = {0,0 , -30,-450 , 30,-450}
+viewDown = {0,0 , 30,450 , -30,450}
 --LEFT, DOWN = PHYSDOT
 --RIGHT, UP = SPR
 enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
@@ -269,7 +271,7 @@ enemyBodyRight = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, 
 enemyBodyUp = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewUp}
 enemyBodyDown = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewDown}
 Enemy = { x = 0, y = 0 , spr = nil, physDot = nil, initDirection = nil, bound1 = nil, bound2 = nil, orientation = 0, pathLength = 0}
-function Enemy:new(x, y, orientation, pathLen)
+function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
@@ -287,9 +289,17 @@ function Enemy:new(x, y, orientation, pathLen)
     enemy:play()
 	
 	if(self.orientation == 0) then
-		self.initDirection = 'r'
+		if(dir == 0) then
+			self.initDirection = 'r'
+		else
+			self.initDirection = 'l'
+		end
 	else
-		self.initDirection = 'u'
+		if(dir == 0) then
+			self.initDirection = 'u'
+		else
+			self.initDirection = 'd'
+		end
 	end
 	
 	self.spr = enemy
@@ -625,10 +635,11 @@ mapinit=function()
 				--Ghetto typecasting!!
 				local orientation = line[4] + 0
 				
-				local dist = line[5]
+				local dist = line[5] + 0
+				local dir = line[6] + 0
                 --image == "../gfx/test_redtile.png"
                 --bodyname = "test_redtile"
-                local obj = Enemy:new(x, y, orientation, dist)
+                local obj = Enemy:new(x, y, orientation, dist, dir)
 				obj:init()
                 worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.physDot)
@@ -765,7 +776,7 @@ init=function()
     end
 
     physics.start()
-    --physics.setDrawMode("hybrid")
+    physics.setDrawMode("hybrid")
 	physics.setGravity( 0, 0 )
     --print("hi")
 
@@ -900,20 +911,22 @@ function onShake()
     --print("SHAKE")
     --pause everything
     Runtime:removeEventListener( "enterFrame", levelLoop )
-    physics:pause()
+   
     if open_menu then
         open_menu=false
+		physics:pause()
         menu:init()
         
     else
         open_menu=true
+		physics.start()
         menu:push()
     end
     --player:pose()
     --resume everything
     --print(disguise)
     Runtime:addEventListener( "enterFrame", levelLoop )
-    physics:start()
+    --physics:start()
 end
 -----------------------------------------------------------------------
 --
