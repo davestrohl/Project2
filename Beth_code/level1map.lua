@@ -35,16 +35,18 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 165)
-    local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 166)
+    local playerSet = sprite.newSpriteSet(playerSheet, 1, 34)
     --Set up animations for all the costumes
     sprite.add(playerSet, "defdown", 1, 6, 1000)
     sprite.add(playerSet, "defup", 7, 6, 1000)
     sprite.add(playerSet, "defright", 13, 6, 1000)
     sprite.add(playerSet, "defleft", 19, 6, 1000)
-    --[[sprite.add(playerSet, "guard", 25, 6, 1000)
-    sprint.add(playerSet, "plant", 31, 6, 1000)]]
-    --sprite.add(playerSet, "dino", 6, 6, 1000)
+    sprite.add(playerSet, "guard", 25, 6, 1000)
+    sprint.add(playerSet, "plant", 31, 1, 1000)
+    sprite.add(playerSet, "dino", 32, 1, 1000)
+    sprite.add(playerSet, "statue1", 33, 1, 1000)
+    sprite.add(playerSet, "statue2", 34, 1, 1000)
     
     player = sprite.newSprite(playerSet)
     player.x = x
@@ -161,7 +163,7 @@ local function onCollide(self, event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -183,7 +185,7 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -258,7 +260,7 @@ function Player:enterFrame(event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -283,7 +285,7 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
