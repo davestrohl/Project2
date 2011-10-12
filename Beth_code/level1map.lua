@@ -155,7 +155,7 @@ local function onCollide(self, event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -177,7 +177,7 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				if ((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -250,7 +250,7 @@ function Player:enterFrame(event)
 				--print(l.value.orientation)
 				if ((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -275,7 +275,7 @@ function Player:enterFrame(event)
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
 					--background:setFillColor(255,0,0)
-                    if (disguise == "up" or disguise == "left" or disguise == "down" or disguise == "left") then
+                    if (disguise == "def") then
                         next_level = "level1map"
                         levelOver()
                         print("HIT")
@@ -531,7 +531,7 @@ cameraShape = {0,0 , 200, -300 , 200,300}
 cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
 pivotBody = {friction = 0.7, isSensor = true}
 
-Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, rotation = 0}
+Camera = {x = 0, y = 0 , spr = nil, initDirection = 'r', pivot = nil, joint = nil, timerProc = false, timerHandle = nil, rotation = 0}
 function Camera:new(x, y, rotation)
 	self.x = x; self.y = y; self.rotation = rotation
 	
@@ -558,7 +558,7 @@ function Camera:new(x, y, rotation)
 
 
 
-	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc}
+	local object = {x = x, y = y, spr = self.spr, pivot = self.pivot, direction = self.spr.direction, joint = self.joint, timerProc = self.timerProc, timerHandle = self.timerHandle}
 	setmetatable(object, {__index = Camera})
 	self.spr.super = object
 	
@@ -600,7 +600,7 @@ function Camera:enterFrame(event)
 	--print(lim1 .. " and " .. lim2)
 	if(self.joint.jointAngle <= lim1 or self.joint.jointAngle >= lim2) then
 		if(not self.timerProc) then
-			timer.performWithDelay(2000, self, 1)
+			self.timerHandle = timer.performWithDelay(2000, self, 1)
 			self.timerProc = true
 		end
 	elseif(self.joint.jointAngle >= lim1 and self.joint.jointAngle <= lim2) then
@@ -616,7 +616,7 @@ end
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-----------------------------Exit  
+----------------------------Exit-------------------------
 ExitDoor = {x = 0, y = 0, spr = nil}
 
 function ExitDoor:new(x, y)
@@ -1053,6 +1053,9 @@ unloadMe = function()
     
     local l = cameraList
     while l do
+		if(l.value.timerHandle) then
+			timer.cancel(l.value.timerHandle)
+		end
         Runtime:removeEventListener("enterFrame", l.value)
         l = l.list
      end
