@@ -131,14 +131,16 @@ local function onCollide(self, event)
 				self.super.touchedObject = event.other
 				--print(l.value.orientation)
 				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
-					background:setFillColor(255,0,0)
+					--background:setFillColor(255,0,0)
+					print("HIT")
 					--LOSE
 				end
 			elseif(l.value.physDot == event.other) then
 				self.super.isTouching = true
 				self.super.touchedObject = event.other
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
-					background:setFillColor(255,0,0)
+					--background:setFillColor(255,0,0)
+					print("HIT")
 				end
 			end
 			l = l.next
@@ -148,7 +150,8 @@ local function onCollide(self, event)
 		while l do
 			--print(l.value.spr)
 			if(l.value.spr == event.other) then
-				background:setFillColor(255,0,0)
+				--background:setFillColor(255,0,0)
+				print("HIT")
 			end
 			l = l.next
 		end
@@ -159,13 +162,15 @@ local function onCollide(self, event)
 				self.super.isTouching = false
 				self.super.touchedObject = nil
 				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
-					background:setFillColor(0,0,200)
+					--background:setFillColor(0,0,200)
+					print("UNHIT")
 				end
 			elseif(l.value.physDot == event.other) then
 				self.super.isTouching = false
 				self.super.touchedObject = nil
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
-					background:setFillColor(0,0,200)
+					--background:setFillColor(0,0,200)
+					print("UNHIT")
 				end
 			end
 			l = l.next
@@ -174,7 +179,8 @@ local function onCollide(self, event)
 		l = cameraList
 		while l do
 			if(l.value.spr == event.other) then
-				background:setFillColor(0,0,200)
+				--background:setFillColor(0,0,200)
+				print("UNHIT")
 			end
 			l = l.next
 		end 
@@ -190,16 +196,20 @@ function Player:enterFrame(event)
 			if(l.value.spr == self.touchedObject) then
 				--print(l.value.orientation)
 				if((l.value.orientation == 0 and l.value.spr.direction == 'r') or (l.value.orientation == 1 and l.value.spr.direction == 'u')) then
-					background:setFillColor(255,0,0)
+					--background:setFillColor(255,0,0)
+					print("HIT")
 					--LOSE
 				elseif((l.value.orientation == 0 and l.value.spr.direction == 'l') or (l.value.orientation == 1 and l.value.spr.direction == 'd')) then
-					background:setFillColor(0,0,200)
+					--background:setFillColor(0,0,200)
+					print("UNHIT")
 				end
 			elseif(l.value.physDot == self.touchedObject) then
 				if((l.value.orientation == 0 and l.value.physDot.direction == 'l') or (l.value.orientation == 1 and l.value.physDot.direction == 'd')) then
-					background:setFillColor(255,0,0)
+					--background:setFillColor(255,0,0)
+					print("HIT")
 				elseif((l.value.orientation == 0 and l.value.physDot.direction == 'r') or (l.value.orientation == 1 and l.value.physDot.direction == 'u')) then
-					background:setFillColor(0,0,200)
+					--background:setFillColor(0,0,200)
+					print("UNHIT")
 				end
 			end
 			l = l.next
@@ -602,16 +612,17 @@ mapinit=function()
 				worldgroup:insert(obj.physDot)
                 worldgroup:insert(obj.spr.bound1)
                 worldgroup:insert(obj.spr.bound2)
-            elseif(file == "camera") then
+            elseif file == "camera" then
 				print("camera")
-                x = line[2]
-                y = line[3]
-				rotation = line[4]
+				print(line[2])
+                local x = line[2] + 0
+                local y = line[3] + 0
+				local rotation = line[4] + 0
 				local obj = Camera:new(x,y,rotation)
 				obj:init()
 				worldgroup:insert(obj.spr)
 				worldgroup:insert(obj.pivot)
-				worldgroup:insert(obj.joint)
+				--worldgroup:insert(obj.joint)
 			else
                 print("not enemy")
                 x = line[2]
@@ -619,11 +630,11 @@ mapinit=function()
                 width=line[4]
                 height=line[5]
                 if file == "desk" then
-                    image="../gfx/filler_desk.png"
-                    bodyname="filler_desk"
+                    image="../gfx/desk.png"
+                    bodyname="desk"
                 elseif file == "plant" then
-                    image ="../gfx/filler_plant.png"
-                    bodyname="filler_plant"
+                    image ="../gfx/plant.png"
+                    bodyname="plant"
                 else
                     image = nil
                 end
@@ -723,6 +734,13 @@ init=function()
 	physics.addBody(player.spr, playerphysics:get("player_sheet"))
 	player.spr.linearDamping = .8
     player.spr.isFixedRotation = true
+	
+	--local line = display.newLine(50, 50, 100,100)
+	--line:append(0,0, 50,50)
+	--line:setFillColor(0,200,0)
+	 --local star = display.newLine( 0,-110, 27,-35 )
+  --star:append( 105,-35, 43,16, 65,90, 0,45, -65,90, -43,15, -105,-35, -27,-35, 0,-110 )
+	
 	
 	--[[enemy1 = Enemy:new(150,150,0,125)
 	enemy1:init()
