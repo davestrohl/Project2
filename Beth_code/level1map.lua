@@ -34,7 +34,7 @@ Player = {x = 0, y = 0, spr = nil, disguised = false, isTouching = false, touche
 
 function Player:new(x, y)
     self.x = x; self.y = y
-    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 64, 95)
+    local playerSheet = sprite.newSpriteSheet("../gfx/player_sheet.png", 112, 165)
     local playerSet = sprite.newSpriteSet(playerSheet, 1, 24)
     --Set up animations for all the costumes
     sprite.add(playerSet, "down", 1, 6, 1000)
@@ -46,8 +46,8 @@ function Player:new(x, y)
     player = sprite.newSprite(playerSet)
     player.x = x
     player.y = y
-	player.xScale = 1.75
-	player.yScale = 1.75
+	--player.xScale = 1.75
+	--player.yScale = 1.75
     
     player:prepare("down")
     player:play()
@@ -148,6 +148,10 @@ end
 local function onCollide(self, event)	
 
 	if(event.phase == "began") then	
+		if(event.other == theExit.spr) then
+			physics.pause()
+			print("HOLY SHIT YOU WON!!!")
+		end
 		local l = enemyList
 		while l do
 			if(l.value.spr == event.other) then
@@ -618,7 +622,22 @@ end
 ----------------------------------------------------------------------
 
 ----------------------------Exit  
+ExitDoor = {x = 0, y = 0, spr = nil}
 
+function ExitDoor:new(x, y)
+	self.x = x; self.y = y
+	
+	self.spr = display.newRect(self.x, self.y, 100,100)
+	
+	object = {x = self.x, y = self.y, spr = self.spr}
+	setmetatable(object, {__index = ExitDoor})
+	return object
+end
+
+function ExitDoor:init()
+	physics.addBody(self.spr)
+end
+	
 --
 -----------------------------------------------------------------------
 --  Level Over function
@@ -730,14 +749,16 @@ mapinit=function()
                 local y = line[4]
                 wall= display.newImage(w,x,y)
                 worldgroup:insert(wall)
-            --[[elseif file == "exit" then
+            elseif file == "exit" then
 				print("exit door")
 				local x = line[2] + 0
 				local y = line[3] + 0
 				local obj = ExitDoor:new(x,y)
 				obj:init()
+				theExit = obj
 				
-				worldgroup:insert(obj.spr)]]
+				
+				worldgroup:insert(obj.spr)
 		   
 			else
                 print("not enemy")
@@ -863,6 +884,7 @@ init=function()
 	enemyList = nil
 	cameraList = nil
 	plantList = nil
+	theExit = nil
 
     --put invisible walls around the world
     top = display.newRect(0,0, 1056, 0)
