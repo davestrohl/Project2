@@ -90,6 +90,13 @@ function Player:setLocation( loc )
 	self.spr.x = loc.x; self.spr.y = loc.y
 end
 
+function Player:init()
+
+
+	print("yo")
+	
+end
+
 
 local function playerTouch(self, event)
     local t = event.target
@@ -260,10 +267,10 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------    Enemy
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
-viewRight = {0,0 , 450,-30 , 450,30}
-viewLeft = {0,0 , -450,30 , -450,-30}
-viewUp = {0,0 , -30,-450 , 30,-450}
-viewDown = {0,0 , 30,450 , -30,450}
+viewRight = {0,0 , 450,-120 , 450,120}
+viewLeft = {0,0 , -450,120 , -450,-120}
+viewUp = {0,0 , -120,-450 , 120,-450}
+viewDown = {0,0 , 120,450 , -120,450}
 --LEFT, DOWN = PHYSDOT
 --RIGHT, UP = SPR
 enemyBodyLeft = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = viewLeft}
@@ -467,7 +474,7 @@ end
 
 -----------------------------------------------------------------------
 -----------------------------Camera-------------------------------
-cameraShape = {0,0 , 90, -40 , 90,40}
+cameraShape = {0,0 , 200, -300 , 200,300}
 cameraBody = {density = 1.5, friction = 0.7, bounce = 0.3, isSensor = true, shape = cameraShape}
 pivotBody = {friction = 0.7, isSensor = true}
 
@@ -787,7 +794,7 @@ init=function()
     
 
 	
-	player = Player:new(250, 250)
+	player = Player:new(50, 100)
 	physics.addBody(player.spr, playerphysics:get("player_sheet"))
 	player.spr.linearDamping = 1
     player.spr.isFixedRotation = true
