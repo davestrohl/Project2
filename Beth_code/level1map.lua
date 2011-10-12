@@ -343,9 +343,12 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	self.x = x; self.y = y;  self.pathLength = pathLen
 	self.orientation = orientation;
 
-	local enemySheet = sprite.newSpriteSheet("../gfx/plant.png", 72,72)
-	local enemySet = sprite.newSpriteSet(enemySheet, 1, 1)
-	sprite.add(enemySet, "patrol", 1, 1, 1000)
+	local enemySheet = sprite.newSpriteSheet("../gfx/guard_sheet.png", 112, 165)
+	local enemySet = sprite.newSpriteSet(enemySheet, 1, 24)
+	sprite.add(enemySet, "down", 1, 6, 1000)
+    sprite.add(enemySet, "up", 7, 6, 1000)
+    sprite.add(enemySet, "right", 13, 6, 1000)
+    sprite.add(enemySet, "left", 19, 6, 1000)
 	
 	local enemy = sprite.newSprite(enemySet)
 	enemy.x = x
@@ -353,7 +356,7 @@ function Enemy:new(x, y, orientation, pathLen, dir)
 	enemy.xScale = 0.5
 	enemy.yScale = 0.5
 	--local enemy = display.newRect(self.x - 5, self.y - 5, 10,10)
-    enemy:prepare("patrol")
+    enemy:prepare("down")
     enemy:play()
 	
 	if(self.orientation == 0) then
@@ -498,6 +501,8 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollisionLeft
 		player:addEventListener("collision", player)]]
+        self.spr:prepare("left")
+        self.spr:play()
 		self.spr:setLinearVelocity(-30, 0)
 		self.physDot:setLinearVelocity(-30, 0)
 
@@ -511,16 +516,20 @@ function Enemy:patrol()
 		--[[player:removeEventListener("collision", player)
 		player.collision = onCollideRight
 		player:addEventListener("collision", player)]]
-		
+		self.spr:prepare("right")
+        self.spr:play()
 		self.spr:setLinearVelocity(30, 0)
 		self.physDot:setLinearVelocity(30, 0)
 		
 	elseif(self.spr.direction == 'u') then
+        self.spr:prepare("up")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, -30)
 		self.physDot:setLinearVelocity(0, -30)
 		
 	elseif(self.spr.direction == 'd') then
-
+        self.spr:prepare("down")
+        self.spr:play()
 		self.spr:setLinearVelocity(0, 30)
 		self.physDot:setLinearVelocity(0, 30)
 		
